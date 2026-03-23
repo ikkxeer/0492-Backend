@@ -72,7 +72,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.example.secureapi.SecureApiApplication</mainClass>
+                    <mainClass>com.example.backend.SecureApiApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
