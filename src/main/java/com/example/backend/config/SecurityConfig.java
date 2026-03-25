@@ -47,6 +47,8 @@ public class SecurityConfig {
                 .requestMatchers("/admin.html").hasRole("ADMIN")
                 // Auth público
                 .requestMatchers("/api/auth/**").permitAll()
+                // Users público
+                .requestMatchers("/api/users/**").permitAll()
                 // Resto protegido
                 .anyRequest().authenticated()
                 )
