@@ -49,6 +49,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 // Users público
                 .requestMatchers("/api/users/**").permitAll()
+                // Pale público
+                .requestMatchers("/api/pales/**").permitAll()
                 // Resto protegido
                 .anyRequest().authenticated()
                 )
