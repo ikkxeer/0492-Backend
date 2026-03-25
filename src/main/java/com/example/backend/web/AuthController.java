@@ -21,6 +21,7 @@ public class AuthController {
         this.authService = authService;
     }
 
+    // /api/auth/login para hacer el login
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         String token = authService.login(request.username(), request.password());
