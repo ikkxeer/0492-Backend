@@ -1,27 +1,38 @@
 package com.example.backend.domain;
 
-import java.util.Set;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "usuari")
 public class UserAccount {
 
-    private final String id;
-    private final String username;
-    private final String password;
-    private final Set<String> roles;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    
+    private String nom;
+    private String email;
+    private String telefon;
+    private String contrasenya;
+    private String departament;
+    private String ubicacio;
 
-    public UserAccount(String id, String username, String password, Set<String> roles) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
+    @Column(name = "id_rol")
+    private Integer idRol;
 
-    public String getId() { return id; }
-    public String getUsername() { return username; }
-    public String getPassword() {   
-        return password;
+    public Integer getId() { return id; }
+    public String getNom() { return nom; }
+    public String getEmail() { return email; }
+    public String getContrasenya() { return contrasenya; }
+
+    public void setContrasenya(String contrasenya) {
+        this.contrasenya = contrasenya;
     }
     
-    public Set<String> getRoles() { return roles; }
-}
 
+    public java.util.List<String> getRoles() {
+        if (idRol == 1) return java.util.List.of("ROLE_USER");
+        if (idRol == 2) return java.util.List.of("ROLE_ADMIN");
+        return java.util.List.of();
+    }
+}
