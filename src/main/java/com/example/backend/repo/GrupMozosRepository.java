@@ -6,11 +6,11 @@ package com.example.backend.repo;
 
 import com.example.backend.domain.Pale;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 /**
  *
  * @author samui
  */
-
-
-public interface PaleRepository extends JpaRepository<Pale, Integer> {
+public interface GrupMozosRepository extends JpaRepository<Pale, Integer> {
 }
+

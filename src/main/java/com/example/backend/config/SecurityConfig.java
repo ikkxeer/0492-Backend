@@ -51,6 +51,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/**").permitAll()
                 // Pale público
                 .requestMatchers("/api/pales/**").permitAll()
+                // Grup mozos público
+                .requestMatchers("/api/grupmozos/**").permitAll()
                 // Resto protegido
                 .anyRequest().authenticated()
                 )
