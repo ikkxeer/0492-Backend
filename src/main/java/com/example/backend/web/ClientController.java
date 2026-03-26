@@ -12,14 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * Controlador pels clients
+ * 
+ * /api/client
+ *  - /total: retorna el total de clients
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/client")
 public class ClientController {
-    
+    // Atributs de la classe
     @Autowired
     private ClientService clientService;
     

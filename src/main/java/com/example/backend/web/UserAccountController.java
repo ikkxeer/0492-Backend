@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * Endpoint /api/users para hacer consultas a la tabla de 'usuari'
+ * Controlador pels Usuaris
  * 
- * GET (/api/users): Devuelve todos los usuarios
- * GET (/api/users/search?email=test@gmail.com): Devuelve usuario por email
- * @author samui
+ * /api/users
+ *  - /search: Buscar usuari per mail i retornar-ho
+ *  - /users: Retorna el total d'usuaris
+ *
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @CrossOrigin(origins = "*")
 @RestController

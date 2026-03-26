@@ -13,14 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * Controlador per grupmozos
+ * 
+ * /api/grupmozos
+ *  - /total: retorna el total de grupmozos
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/grupmozos")
 public class GrupMozosController {
-    
+    // Atributs de la classe
     @Autowired
     private GrupMozosService grupMozosService;
 

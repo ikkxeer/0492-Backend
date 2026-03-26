@@ -12,14 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * Controlador pels pales
+ * 
+ * /api/pales
+ *  - /total: retorna el total de pales
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/pales")
 public class PaleController {
-
+    // Atrbiuts de la classe
     @Autowired
     private PaleService paleService;
 

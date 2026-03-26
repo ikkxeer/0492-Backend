@@ -6,11 +6,11 @@ package com.example.backend.repo;
 
 import com.example.backend.domain.Pale;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 /**
+ * Repositori per els pales
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
-
-
 public interface PaleRepository extends JpaRepository<Pale, Integer> {
 }

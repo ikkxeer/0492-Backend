@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 /**
  * Taula 'client' representada amb getters i setters
  * 
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @Entity
 @Table(name = "client")

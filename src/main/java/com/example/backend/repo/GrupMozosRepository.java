@@ -8,8 +8,9 @@ import com.example.backend.domain.GrupMozos;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
+ * Repositori per els grupmozos
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public interface GrupMozosRepository extends JpaRepository<GrupMozos, Integer> {
 }

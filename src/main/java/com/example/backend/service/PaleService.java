@@ -7,9 +7,11 @@ package com.example.backend.service;
 import com.example.backend.repo.PaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 /**
+ * Service per els pales
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @Service
 public class PaleService {

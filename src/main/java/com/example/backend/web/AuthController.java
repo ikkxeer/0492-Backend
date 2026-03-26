@@ -9,14 +9,27 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// Problemas con CORS solucionados para aceptar todos los origenes
+/**
+ * Controlador per l'autenticació
+ * 
+ * /api/auth
+ *  - /login: realitzar el login i respondre amb el token
+ *
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
+ */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    // Atributs de la classe
     private final AuthService authService;
 
+    /**
+     * Constructor default de la classe
+     * 
+     * @param authService Servei d'autenticació
+     */
     public AuthController(AuthService authService) {
         this.authService = authService;
     }

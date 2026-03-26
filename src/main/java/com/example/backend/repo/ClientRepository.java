@@ -8,8 +8,9 @@ import com.example.backend.domain.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
+ * Repositori per els clients
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 }

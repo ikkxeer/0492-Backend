@@ -8,21 +8,39 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Service per l'autenticació
+ *
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
+ */
 @Service
 public class AuthService {
 
+    // Atributs de la classe
     private final UserRepository repo;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-        public AuthService(UserRepository repo,
-                           PasswordEncoder passwordEncoder,
-                           JwtService jwtService) {
+    /**
+     * Constructor default de la classe
+     * 
+     * @param repo Repositori d'usuari
+     * @param passwordEncoder Encriptador de contrasenyes
+     * @param jwtService Servei per el token
+     */
+    public AuthService(UserRepository repo, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.repo = repo;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
 
+    /**
+     * Funció per realitzar el login
+     * 
+     * @param email Email de l'usuari
+     * @param rawPassword Contrasenya de l'usuari
+     * @return Token d'usuari
+     */
     public String login(String email, String rawPassword) {
         System.out.println("INTENT DE LOGIN DE: " + email);
         System.out.println("PASSWORD: [" + rawPassword + "]");

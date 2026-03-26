@@ -11,6 +11,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service per els usuaris
+ *
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
+ */
 @Service
 public class UserAccountService {
 
