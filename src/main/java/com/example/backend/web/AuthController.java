@@ -37,7 +37,7 @@ public class AuthController {
     // /api/auth/login para hacer el login
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
-        String token = authService.login(request.username(), request.password());
+        String token = authService.login(request.email(), request.password());
         return new LoginResponse(token);
     }
 }
