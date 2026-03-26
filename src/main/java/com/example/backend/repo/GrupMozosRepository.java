@@ -4,13 +4,13 @@
  */
 package com.example.backend.repo;
 
-import com.example.backend.domain.Pale;
+import com.example.backend.domain.GrupMozos;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author samui
  */
-public interface GrupMozosRepository extends JpaRepository<Pale, Integer> {
+public interface GrupMozosRepository extends JpaRepository<GrupMozos, Integer> {
 }
 
