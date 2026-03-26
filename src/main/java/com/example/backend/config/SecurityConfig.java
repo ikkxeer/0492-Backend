@@ -35,16 +35,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                // Estáticos (Spring Boot sirve /static automáticamente)
-                .requestMatchers(
-                        "/", "/index.html",
-                        "/login.html", "/profile.html", "/hello.html",
-                        "/favicon.ico",
-                        "/*.css", "/*.js",
-                        "/css/**", "/js/**", "/images/**", "/webjars/**"
-                ).permitAll()
-                //restringimos acceso a ruta estatica admin
-                .requestMatchers("/admin.html").hasRole("ADMIN")
                 // Auth público
                 .requestMatchers("/api/auth/**").permitAll()
                 // Users público
