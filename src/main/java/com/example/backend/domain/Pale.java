@@ -8,29 +8,37 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- *
- * @author samui
+ * Taula 'pale' representada amb getters i setters
+ * 
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @Entity
 @Table(name = "pale")
 public class Pale {
 
+    // Constructor per defecte
     public Pale() {}
     
+    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_pale;
-
-    // Relación con la tabla de grupos
+    @Column(name = "id_grup_pales")
     private Integer id_grup_pales; 
+    @Column(name = "lot")
     private String lot;
+    @Column(name = "sscc")
     private String sscc;
     
     @Column(columnDefinition = "DECIMAL(10,2)")
     private Double pes;
+    @Column(name = "mesures")
     private String mesures;
+    @Column(name = "paquets")
     private Integer paquets;
+    @Column(name = "data_expedicio")
     private LocalDateTime data_expedicio;
+    @Column(name = "estat")
     private String estat;
     
     // Getters

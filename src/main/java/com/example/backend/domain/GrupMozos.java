@@ -4,6 +4,7 @@
  */
 package com.example.backend.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,20 +12,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- *
+ * Taula 'grupmozos' representada amb getters i setters
  * @author samui
  */
 @Entity
 @Table(name = "grupmozos")
 public class GrupMozos {
     
+    // Constructor per defecte
     public GrupMozos () {}
     
+    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_grup;
-    
+    @Column(name = "nom")
     private String nom;
+    @Column(name = "descripcio")
     private String descripcio;
     
     // Getters

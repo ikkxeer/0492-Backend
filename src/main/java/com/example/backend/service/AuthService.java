@@ -26,16 +26,14 @@ public class AuthService {
     public String login(String email, String rawPassword) {
         System.out.println("INTENT DE LOGIN DE: " + email);
         System.out.println("PASSWORD: [" + rawPassword + "]");
-        UserAccount user = repo.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        UserAccount user = repo.findByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         if (!passwordEncoder.matches(rawPassword, user.getContrasenya())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
     }
-        
- 
-    System.out.println("PASSWORD GUARDAT: " + user.getContrasenya());
-    System.out.println("COINCIDEIX: " + passwordEncoder.matches(rawPassword, user.getContrasenya()));
+  
+        System.out.println("PASSWORD GUARDAT: " + user.getContrasenya());
+        System.out.println("COINCIDEIX: " + passwordEncoder.matches(rawPassword, user.getContrasenya()));
                 
         if (!passwordEncoder.matches(rawPassword, user.getContrasenya())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);

@@ -2,13 +2,20 @@ package com.example.backend.domain;
 
 import jakarta.persistence.*;
 
+/**
+ * Taula 'usauri' representada amb getters i setters
+ * 
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
+ */
 @Entity
 @Table(name = "usuari")
 public class UserAccount {
 
+    // Constructor per defecte
     public UserAccount() {
     }
     
+    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,11 +24,14 @@ public class UserAccount {
     private String nom;
     @Column(name = "email")
     private String email;
+    @Column(name = "telefon")
     private String telefon;
+    @Column(name = "contrasenya")
     private String contrasenya;
+    @Column(name = "departament")
     private String departament;
+    @Column(name = "ubicacio")
     private String ubicacio;
-
     @Column(name = "id_rol")
     private Integer idRol;
 
