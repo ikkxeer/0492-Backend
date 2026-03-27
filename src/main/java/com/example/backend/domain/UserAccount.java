@@ -62,5 +62,43 @@ public class UserAccount {
     public void setContrasenya(String contrasenya) {
         this.contrasenya = contrasenya;
     }
+
+    public void setEstat(boolean estat) {
+        this.estat = estat;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setTelefon(String telefon) {
+        this.telefon = telefon;
+    }
+
+    public void setDepartament(String departament) {
+        this.departament = departament;
+    }
+
+    public void setUbicacio(String ubicacio) {
+        this.ubicacio = ubicacio;
+    }
+
+    public void setIdRol(Integer idRol) {
+        this.idRol = idRol;
+    }
+
+    public void setUltimAcces(LocalDateTime ultimAcces) {
+        this.ultimAcces = ultimAcces;
+    }
+    
+    
     
 }
