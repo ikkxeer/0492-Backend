@@ -42,7 +42,7 @@ public class SecurityConfig {
                 // Auth público
                 .requestMatchers("/api/auth/**").permitAll()
                 // Users público
-                .requestMatchers("/api/users/**").permitAll()
+                .requestMatchers("/api/usuaris/**").permitAll()
                 // Pale público
                 .requestMatchers("/api/pales/**").permitAll()
                 // Grup mozos público

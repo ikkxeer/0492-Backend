@@ -1,6 +1,7 @@
 package com.example.backend.domain;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Taula 'usauri' representada amb getters i setters
@@ -34,6 +35,10 @@ public class UserAccount {
     private String ubicacio;
     @Column(name = "id_rol")
     private Integer idRol;
+    @Column(name = "estat")
+    private boolean estat;
+    @Column(name = "ultim_acces")
+    private LocalDateTime ultimAcces;
 
     // GETERS
     public Integer getId() { return id; }
@@ -45,17 +50,17 @@ public class UserAccount {
     public String getUbicacio() { return ubicacio; }
     public Integer getIdRol() { return idRol; }
 
+    public boolean isEstat() {
+        return estat;
+    }
+
+    public LocalDateTime getUltimAcces() {
+        return ultimAcces;
+    }
+    
+
     public void setContrasenya(String contrasenya) {
         this.contrasenya = contrasenya;
     }
     
-
-    public java.util.List<String> getRoles() {
-        if (idRol == 1) return java.util.List.of("ROL_ADMINISTRADOR");
-        if (idRol == 2) return java.util.List.of("ROL_GESTOR");
-        if (idRol == 3) return java.util.List.of("ROL_MOZO");
-        if (idRol == 4) return java.util.List.of("ROL_REPARTIDOR");
-
-        return java.util.List.of();
-    }
 }

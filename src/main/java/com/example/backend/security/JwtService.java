@@ -25,15 +25,14 @@ public class JwtService {
     
     
 
-    public String issueToken(String userId, String username, List<String> roles) {
+    public String issueToken(String userId, String username) {
     Instant now = Instant.now();
     return Jwts.builder()
         .subject(username) // principal = username
         .issuedAt(Date.from(now))
         .expiration(Date.from(now.plusSeconds(1800)))
         .claims(Map.of(
-            "userId", userId,
-            "roles", roles
+            "userId", userId
         ))
         .signWith(key)
         .compact();
