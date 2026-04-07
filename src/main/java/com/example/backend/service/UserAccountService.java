@@ -5,12 +5,15 @@
 package com.example.backend.service;
 
 import com.example.backend.domain.UserAccount;
-import com.example.backend.repo.UserRepository; // Ajustado a tu paquete 'repo'
+import java.util.UUID;
+import com.example.backend.repo.UserRepository;
+import static jakarta.persistence.GenerationType.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Service per els usuaris
@@ -44,9 +47,13 @@ public class UserAccountService {
     
     // Crear usuari
     public UserAccount createUser(UserAccount user) {
-        // Posem l'estat a true per defecte al crear l'usuari, es guarda l'estat
-        user.setEstat(true); 
-        // Fem l'insert i retornem l'usuari creat
+        // Possem l'estat com a activat per default
+        user.setEstat(true);
+        // Generem la contrasenya temporal default
+        String tempPassword = "Tmp-" + java.util.UUID.randomUUID().toString().substring(0, 10);
+        // Possem la contrasenya
+        user.setContrasenya(new BCryptPasswordEncoder().encode(tempPassword));
+        // Creem l'usuari i retornem la resposta
         return userRepository.save(user);
     }
     
