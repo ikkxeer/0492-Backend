@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -48,6 +49,13 @@ public class PaleController {
     @GetMapping
     public List<Pale> getAll() {
         return paleService.findAllPales();
+    }
+    
+    // Endpoint per obtenir tots els pales segons estat passat per parametre: GET /api/pales/total/estado
+    @GetMapping("/total/estado")
+    public long countByEstado(@RequestParam String nombre) {
+        // Usamos el objeto inyectado 'paleService' (en minúscula)
+        return paleService.countByEstado(nombre); 
     }
     
     // Endpoint per crear un pale: POST /api/pales

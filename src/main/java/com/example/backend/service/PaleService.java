@@ -41,6 +41,11 @@ public class PaleService {
     public Optional<Pale> findPaleById(Integer id) {
         return paleRepository.findById(id);
     }
+    
+    // Retornar total de pales segons estat
+    public long countByEstado(String estado) {
+        return paleRepository.countByEstat(estado);
+    }
 
     // Eliminar por ID
     public void deletePale(Integer id) {

@@ -13,4 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public interface PaleRepository extends JpaRepository<Pale, Integer> {
+    // Aixó genera: SELECT COUNT(*) FROM pale WHERE estat = ?
+    long countByEstat(String estat);
 }
