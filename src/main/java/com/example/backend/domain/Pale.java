@@ -55,4 +55,33 @@ public class Pale {
     // Setters
     public void setId_grup_pales(Integer id_grup_pales) { this.id_grup_pales = id_grup_pales; }
     public void setEstat(String estat) { this.estat = estat; }
+
+    public void setId_pale(Integer id_pale) {
+        this.id_pale = id_pale;
+    }
+
+    public void setLot(String lot) {
+        this.lot = lot;
+    }
+
+    public void setSscc(String sscc) {
+        this.sscc = sscc;
+    }
+
+    public void setPes(Double pes) {
+        this.pes = pes;
+    }
+
+    public void setMesures(String mesures) {
+        this.mesures = mesures;
+    }
+
+    public void setPaquets(Integer paquets) {
+        this.paquets = paquets;
+    }
+
+    public void setData_expedicio(LocalDateTime data_expedicio) {
+        this.data_expedicio = data_expedicio;
+    }
+    
 }

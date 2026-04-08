@@ -4,7 +4,10 @@
  */
 package com.example.backend.service;
 
+import com.example.backend.domain.Pale;
 import com.example.backend.repo.PaleRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +26,25 @@ public class PaleService {
     public long getTotalPales() {
         return paleRepository.count();
     }
+    
+    // Obtener todos los palés
+    public List<Pale> findAllPales() {
+        return paleRepository.findAll();
+    }
+
+    // Guardar (sirve para crear nuevo o actualizar existente)
+    public Pale savePale(Pale pale) {
+        return paleRepository.save(pale);
+    }
+
+    // Buscar por ID
+    public Optional<Pale> findPaleById(Integer id) {
+        return paleRepository.findById(id);
+    }
+
+    // Eliminar por ID
+    public void deletePale(Integer id) {
+        paleRepository.deleteById(id);
+    }
+
 }
