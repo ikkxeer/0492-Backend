@@ -4,8 +4,10 @@
  */
 package com.example.backend.service;
 
+import com.example.backend.domain.Client;
 import com.example.backend.repo.ClientRepository;
-import com.example.backend.repo.GrupMozosRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,26 @@ public class ClientService {
     // Devolver numero total de grup de mozos
     public long getTotalClient() {
         return clientRepository.count();
+    }
+    
+    // Obtener todos los palés
+    public List<Client> findAllClients() {
+        return clientRepository.findAll();
+    }
+
+    // Guardar (sirve para crear nuevo o actualizar existente)
+    public Client saveClient(Client client) {
+        return clientRepository.save(client);
+    }
+
+    // Buscar por ID
+    public Optional<Client> findClientById(Integer id) {
+        return clientRepository.findById(id);
+    }
+
+    // Eliminar por ID
+    public void deleteClient(Integer id) {
+        clientRepository.deleteById(id);
     }
     
 }
