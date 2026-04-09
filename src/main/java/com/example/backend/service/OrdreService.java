@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.backend.service;
+
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.backend.repo.OrdreRepository;
@@ -22,31 +23,39 @@ public class OrdreService {
     @Autowired
     private OrdreRepository ordreRepository;
 
-    // Retorna totes les ordres
+    // rolId=1: ADMIN → totes les ordres
     public List<OrdreDTO> findAll() {
         return ordreRepository.findAll().stream()
                 .map(OrdreDTO::new)
                 .collect(Collectors.toList());
     }
 
-    // Buscar per Gestor
+    // rolId=2: GESTOR → ordres on ell és el gestor
     public List<OrdreDTO> findByGestor(String nom) {
         return ordreRepository.findByGestorNom(nom).stream()
                 .map(OrdreDTO::new)
                 .collect(Collectors.toList());
     }
-    
-    // Buscar per ID
+
+    // rolId=3: MOZO → ordres assignades al seu grup
+    public List<OrdreDTO> findByMozoGrupo(String nomMozo) {
+        return ordreRepository.findByGrupoMozoUsuarioNom(nomMozo).stream()
+                .map(OrdreDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    // rolId=4: TRANSPORTISTA → ordres assignades a ell
+    public List<OrdreDTO> findByTransportista(String nom) {
+        return ordreRepository.findByTransportistaNom(nom).stream()
+                .map(OrdreDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    // Buscar per identificador (detall)
     public Optional<OrdreDTO> findByIdentificador(String id) {
         return ordreRepository.findAll().stream()
                 .filter(o -> o.getIdentificador().equals(id))
                 .findFirst()
                 .map(OrdreDTO::new);
-    }
-    
-    public List<OrdreDTO> findByMozoGrupo(String nomMozo) {
-        return ordreRepository.findByGrupoMozoUsuarioNom(nomMozo).stream()
-                .map(OrdreDTO::new)
-                .collect(Collectors.toList());
     }
 }

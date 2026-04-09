@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.backend.web;
+
 import com.example.backend.service.OrdreService;
 import com.example.backend.web.dto.OrdreDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,12 @@ import java.util.List;
 
 /**
  * Controlador per ordres
- * 
- * /api/ordres: Retorna totes les ordres amb l'historial dins
- *  - /{id}: Retorna el detall d'una ordre
+ *
+ * /api/ordres: Retorna les ordres filtrades per rol:
+ *   rolId=1 (ADMIN)         → totes les ordres
+ *   rolId=2 (GESTOR)        → ordres on ell és el gestor (?nom=)
+ *   rolId=3 (MOZO)          → ordres del seu grup de mozos (?nom=)
+ *   rolId=4 (TRANSPORTISTA) → ordres assignades a ell (?nom=)
  *
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
@@ -26,7 +30,7 @@ public class OrdreController {
     @Autowired
     private OrdreService ordreService;
 
-    // Endpoint per obtenir totes les ordres: GET /api/ordres
+    // Endpoint per obtenir les ordres filtrades per rol: GET /api/ordres
     @GetMapping
     public ResponseEntity<List<OrdreDTO>> getOrdres(
         @RequestParam(required = false) String nom,
@@ -35,11 +39,27 @@ public class OrdreController {
         List<OrdreDTO> ordres;
 
         if (rolId != null && rolId == 1) {
+            // ADMIN: veu totes les ordres
             ordres = ordreService.findAll();
+
+        } else if (rolId != null && rolId == 2) {
+            // GESTOR: veu les ordres on ell és el gestor responsable
+            ordres = (nom != null && !nom.isEmpty())
+                ? ordreService.findByGestor(nom)
+                : List.of();
+
         } else if (rolId != null && rolId == 3) {
-            ordres = ordreService.findByMozoGrupo(nom);
-        } else if (nom != null && !nom.isEmpty()) {
-            ordres = ordreService.findByGestor(nom);
+            // MOZO: veu les ordres assignades al seu grup de mozos
+            ordres = (nom != null && !nom.isEmpty())
+                ? ordreService.findByMozoGrupo(nom)
+                : List.of();
+
+        } else if (rolId != null && rolId == 4) {
+            // TRANSPORTISTA: veu les ordres assignades directament a ell
+            ordres = (nom != null && !nom.isEmpty())
+                ? ordreService.findByTransportista(nom)
+                : List.of();
+
         } else {
             ordres = List.of();
         }
