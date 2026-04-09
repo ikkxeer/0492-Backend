@@ -4,13 +4,15 @@
  */
 package com.example.backend.repo;
 
-import com.example.backend.domain.GrupPales;
+import com.example.backend.domain.Ordre;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Repositori per els gruppales
+ * Repositori per les ordres
  *
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
-public interface GrupPalesRepository extends JpaRepository<GrupPales, Integer> {
+public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
+    List<Ordre> findByGestorNom(String nom);
 }
