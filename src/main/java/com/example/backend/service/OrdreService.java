@@ -43,4 +43,10 @@ public class OrdreService {
                 .findFirst()
                 .map(OrdreDTO::new);
     }
+    
+    public List<OrdreDTO> findByMozoGrupo(String nomMozo) {
+        return ordreRepository.findByGrupoMozoUsuarioNom(nomMozo).stream()
+                .map(OrdreDTO::new)
+                .collect(Collectors.toList());
+    }
 }

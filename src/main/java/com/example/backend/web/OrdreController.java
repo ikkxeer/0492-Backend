@@ -28,15 +28,22 @@ public class OrdreController {
 
     // Endpoint per obtenir totes les ordres: GET /api/ordres
     @GetMapping
-    public ResponseEntity<List<OrdreDTO>> getOrdres(@RequestParam(required = false) String gestorNom) {
+    public ResponseEntity<List<OrdreDTO>> getOrdres(
+        @RequestParam(required = false) String nom,
+        @RequestParam(required = false) Integer rolId
+    ) {
         List<OrdreDTO> ordres;
-        
-        if (gestorNom != null && !gestorNom.equals("ADMIN")) {
-            ordres = ordreService.findByGestor(gestorNom);
-        } else {
+
+        if (rolId != null && rolId == 1) {
             ordres = ordreService.findAll();
+        } else if (rolId != null && rolId == 3) {
+            ordres = ordreService.findByMozoGrupo(nom);
+        } else if (nom != null && !nom.isEmpty()) {
+            ordres = ordreService.findByGestor(nom);
+        } else {
+            ordres = List.of();
         }
-        
+
         return ResponseEntity.ok(ordres);
     }
 
