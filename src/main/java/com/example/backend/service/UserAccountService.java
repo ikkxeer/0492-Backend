@@ -31,9 +31,9 @@ public class UserAccountService {
         return userRepository.findAll();
     }
 
-    // Devolver usuario por email
-    public Optional<UserAccount> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    // Devolver usuario por ID
+    public Optional<UserAccount> getUserById(Integer id) {
+        return userRepository.findById(id);
     }
     
     // Eliminar usuario por ID

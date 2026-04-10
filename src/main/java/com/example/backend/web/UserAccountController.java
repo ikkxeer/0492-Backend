@@ -42,21 +42,15 @@ public class UserAccountController {
         return userService.getAllUsers();
     }
     
-    /**
-     * GET - Obtener usuario por email
-     * 
-     * ResponseEntity nos permite elegir el codigo de estado
-     * RequestParam atrapa lo que pongas en la URL despues del ?
-     * 
-     * @param email Email a buscar
-     * @return Usuari complert
+/**
+     * GET - Obtener usuario por ID
+     * * @param id ID a buscar
+     * @return Usuari complet
      */
-    @GetMapping("/search")
-    public ResponseEntity<?> getByEmail(@RequestParam String email) {
-        return userService.getUserByEmail(email)
-                // Si encuentra el usuario, devuelve el usuario completo
+    @GetMapping("/{id}") // Cambiado de /search a /{id} para que sea RESTful
+    public ResponseEntity<?> getById(@PathVariable Integer id) {
+        return userService.getUserById(id)
                 .map(user -> ResponseEntity.ok(user))
-                // Si no encuentra el usuario, devuelve 404
                 .orElse(ResponseEntity.notFound().build());
     }
     
