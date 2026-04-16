@@ -4,8 +4,11 @@
  */
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 /**
  * Taula 'pale' representada amb getters i setters
@@ -16,44 +19,42 @@ import java.time.LocalDateTime;
 @Table(name = "pale")
 public class Pale {
 
-    // Constructor per defecte
-    public Pale() {}
-    
-    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id") // El front espera "id"
     private Integer id_pale;
-    @Column(name = "id_grup_pales")
-    private Integer id_grup_pales; 
-    @Column(name = "lot")
+
+    @ManyToOne
+    @JoinColumn(name = "id_grup_pales")
+    @JsonBackReference
+    private GrupPales grupPales;
+
     private String lot;
-    @Column(name = "sscc")
     private String sscc;
     
     @Column(columnDefinition = "DECIMAL(10,2)")
-    private Double pes;
-    @Column(name = "mesures")
+    private java.math.BigDecimal pes;
+
     private String mesures;
-    @Column(name = "paquets")
     private Integer paquets;
+    
+    @JsonProperty("dataExpedicio") // Mapeo de data_expedicio a dataExpedicio
     @Column(name = "data_expedicio")
     private LocalDateTime data_expedicio;
-    @Column(name = "estat")
+    
     private String estat;
     
     // Getters
     public Integer getId_pale() { return id_pale; }
-    public Integer getId_grup_pales() { return id_grup_pales; }
     public String getLot() { return lot; }
     public String getSscc() { return sscc; }
-    public Double getPes() { return pes; }
+    public java.math.BigDecimal getPes() { return pes; }
     public String getMesures() { return mesures; }
     public Integer getPaquets() { return paquets; }
     public LocalDateTime getData_expedicio() { return data_expedicio; }
     public String getEstat() { return estat; }
 
     // Setters
-    public void setId_grup_pales(Integer id_grup_pales) { this.id_grup_pales = id_grup_pales; }
     public void setEstat(String estat) { this.estat = estat; }
 
     public void setId_pale(Integer id_pale) {
@@ -68,9 +69,7 @@ public class Pale {
         this.sscc = sscc;
     }
 
-    public void setPes(Double pes) {
-        this.pes = pes;
-    }
+    public void setPes(java.math.BigDecimal pes) { this.pes = pes; }
 
     public void setMesures(String mesures) {
         this.mesures = mesures;

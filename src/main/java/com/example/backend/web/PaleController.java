@@ -70,7 +70,6 @@ public class PaleController {
         return paleService.findPaleById(id).map(pale -> {
             
             // Actualitzem els camps del pale que hem rebut
-            pale.setId_grup_pales(paleDetails.getId_grup_pales());
             pale.setLot(paleDetails.getLot());
             pale.setSscc(paleDetails.getSscc());
             pale.setPes(paleDetails.getPes());

@@ -4,7 +4,10 @@
  */
 package com.example.backend.service;
 
+import com.example.backend.domain.GrupPales;
 import com.example.backend.repo.GrupPalesRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +18,23 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GrupPalesService {
-    
+
     @Autowired
     private GrupPalesRepository grupPalesRepository;
-    
-    // Devolver numero total de grup de pales
-    public long getTotalGrupPales() {
-        return grupPalesRepository.count();
+
+    public List<GrupPales> findAll() {
+        return grupPalesRepository.findAll();
     }
-    
+
+    public Optional<GrupPales> findById(Integer id) {
+        return grupPalesRepository.findById(id);
+    }
+
+    public GrupPales save(GrupPales grup) {
+        return grupPalesRepository.save(grup);
+    }
+
+    public void delete(Integer id) {
+        grupPalesRepository.deleteById(id);
+    }
 }

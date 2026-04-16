@@ -5,7 +5,10 @@
 package com.example.backend.repo;
 
 import com.example.backend.domain.Pale;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Repositori per els pales
@@ -13,6 +16,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public interface PaleRepository extends JpaRepository<Pale, Integer> {
-    // Aixó genera: SELECT COUNT(*) FROM pale WHERE estat = ?
+    // Aixó genera, SELECT COUNT(*) FROM pale WHERE estat = ?
     long countByEstat(String estat);
+    
+    // Query para 
+    @Query("SELECT p FROM Pale p WHERE p.grupPales.id_grup_pales = :idGrup")
+    List<Pale> findByIdGrupPales(@Param("idGrup") Integer idGrup);
 }

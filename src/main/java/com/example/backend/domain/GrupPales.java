@@ -1,14 +1,20 @@
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Taula 'gruppales' representada amb getters i setters
@@ -19,34 +25,35 @@ import java.time.LocalDateTime;
 @Table(name = "gruppales")
 public class GrupPales {
 
-    // Constructor per defecte
-    public GrupPales() {}
-
-    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id")
     private Integer id_grup_pales;
 
-    @Column(name = "referencia", length = 50)
     private String referencia;
-
-    @Column(name = "temporada", length = 20)
     private String temporada;
-
+    
+    @JsonProperty("dataEntrada")
     @Column(name = "data_entrada")
     private LocalDateTime dataEntrada;
 
-    @Column(name = "estat", length = 30)
     private String estat;
 
-    // Relació de que molts grups de pales pertanyen a un proveïdor
     @ManyToOne
     @JoinColumn(name = "id_proveidor", referencedColumnName = "id_client")
-    private Client proveidor;
+    private Client proveidor; 
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "grupPales", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Pale> pales;
 
     // GETTERS
     public Integer getId_grup_pales() {
         return id_grup_pales;
+    }
+    
+    public List<Pale> getPales() { 
+        return pales; 
     }
 
     public String getReferencia() {
@@ -92,5 +99,9 @@ public class GrupPales {
 
     public void setProveidor(Client proveidor) {
         this.proveidor = proveidor;
+    }
+    
+    public void setPales(List<Pale> pales) { 
+        this.pales = pales; 
     }
 }
