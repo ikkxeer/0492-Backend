@@ -25,6 +25,7 @@ import java.util.List;
 @Table(name = "gruppales")
 public class GrupPales {
 
+    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")

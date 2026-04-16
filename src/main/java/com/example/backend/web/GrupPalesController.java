@@ -24,10 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * Controlador per grupmozos
+ * Controlador per gruppales
  * 
- * /api/grupmozos
- *  - /total: retorna el total de grupmozos
+ * /api/gruppales: retorna tots els grup de pales
+ *  - /total: retorna el total de gruppales
+ *  - /{id}: retorna un grup de pale segons l'id
+ *  - POST: crea un grup de pale passat per parametre
+ *  - PUT /{id}: actualitza un grup de pale passat per parametre
+ *  - DELETE /{id}: elimina un grup de pale segons l'id
  *
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
@@ -36,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/gruppales")
 public class GrupPalesController {
 
+    // Atributs de la classe
     @Autowired
     private GrupPalesService grupPalesService;
     
@@ -46,7 +51,7 @@ public class GrupPalesController {
     private PaleRepository paleRepository;
 
 
-    // GET: Obtener todos los grupos (con sus pales incluidos)
+    // Endpoint per obtenir les tots els grups de pales: GET /api/gruppales
     @GetMapping
     public List<GrupPalesDTO> getAll() {
         return grupPalesRepository.findAll().stream().map(g -> {
@@ -82,7 +87,7 @@ public class GrupPalesController {
         }).collect(java.util.stream.Collectors.toList());
     }
 
-    // GET: Obtener un solo grupo por ID
+    // Endpoint per obtenir un grup de pales segons id: GET /api/gruppales/{id}
     @GetMapping("/{id}")
     public ResponseEntity<GrupPales> getById(@PathVariable Integer id) {
         return grupPalesService.findById(id)
@@ -90,7 +95,7 @@ public class GrupPalesController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST: Crear un nuevo grupo
+    // Endpoint per crear un nou grup de pales: POST /api/gruppales
     @PostMapping
     public GrupPales create(@RequestBody GrupPales grup) {
         if (grup.getDataEntrada() == null) {
@@ -99,7 +104,7 @@ public class GrupPalesController {
         return grupPalesService.save(grup);
     }
 
-    // PUT: Actualizar un grupo existente
+    // Endpoint per a actualitzar un grup de pales: PUT /api/gruppales/{id}
     @PutMapping("/{id}")
     public ResponseEntity<GrupPales> update(@PathVariable Integer id, @RequestBody GrupPales details) {
         return grupPalesService.findById(id).map(grup -> {
@@ -111,7 +116,7 @@ public class GrupPalesController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE: Eliminar un grupo
+    // Endpoint per a eliminar un grup de pales segons id: DELETE /api/gruppales/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (grupPalesService.findById(id).isPresent()) {
@@ -121,6 +126,7 @@ public class GrupPalesController {
         return ResponseEntity.notFound().build();
     }
 
+    // Endpoint per a obtenir el total de grup de pales: GET /api/gruppales/total
     @GetMapping("/total")
     public long countAll() {
         return grupPalesService.findAll().size();

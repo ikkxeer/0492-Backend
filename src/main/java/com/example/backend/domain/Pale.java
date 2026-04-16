@@ -18,7 +18,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "pale")
 public class Pale {
-
+    
+    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id") // El front espera "id"

@@ -19,7 +19,7 @@ public interface PaleRepository extends JpaRepository<Pale, Integer> {
     // Aixó genera, SELECT COUNT(*) FROM pale WHERE estat = ?
     long countByEstat(String estat);
     
-    // Query para 
+    // Query per trobar totes les pales que perteneixen a un grup de pales
     @Query("SELECT p FROM Pale p WHERE p.grupPales.id_grup_pales = :idGrup")
     List<Pale> findByIdGrupPales(@Param("idGrup") Integer idGrup);
 }

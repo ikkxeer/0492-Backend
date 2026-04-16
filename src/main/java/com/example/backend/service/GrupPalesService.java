@@ -22,18 +22,22 @@ public class GrupPalesService {
     @Autowired
     private GrupPalesRepository grupPalesRepository;
 
+    // Retorna tots els grups de pales
     public List<GrupPales> findAll() {
         return grupPalesRepository.findAll();
     }
 
+    // Troba un pale segons l'ID
     public Optional<GrupPales> findById(Integer id) {
         return grupPalesRepository.findById(id);
     }
 
+    // Guarda un grup de pales amb altre passat per parametre
     public GrupPales save(GrupPales grup) {
         return grupPalesRepository.save(grup);
     }
 
+    // Elimina un grup de pale segons el seu ID
     public void delete(Integer id) {
         grupPalesRepository.deleteById(id);
     }

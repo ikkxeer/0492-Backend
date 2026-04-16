@@ -6,8 +6,9 @@ package com.example.backend.web.dto;
 import java.util.List;
 
 /**
+ * DTO que representa un GrupPale
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public class GrupPalesDTO {
     public String id;
