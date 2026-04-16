@@ -4,6 +4,7 @@
  */
 package com.example.backend.web;
 import com.example.backend.domain.GrupPales;
+import com.example.backend.repo.ClientRepository;
 import com.example.backend.repo.GrupPalesRepository;
 import com.example.backend.repo.PaleRepository;
 import com.example.backend.service.GrupPalesService;
@@ -49,6 +50,9 @@ public class GrupPalesController {
 
     @Autowired
     private PaleRepository paleRepository;
+    
+    @Autowired
+    private ClientRepository clientRepository;
 
 
     // Endpoint per obtenir les tots els grups de pales: GET /api/gruppales
@@ -59,9 +63,8 @@ public class GrupPalesController {
             dto.id = String.valueOf(g.getId_grup_pales());
             dto.referencia = g.getReferencia();
             dto.temporada = g.getTemporada();
-            dto.proveidor = g.getProveidor() != null ? g.getProveidor().getNom() : "";
-            dto.dataEntrada = g.getDataEntrada() != null 
-                ? g.getDataEntrada().toLocalDate().toString() : "";
+            dto.proveidor = g.getProveidor() != null ? String.valueOf(g.getProveidor().getId_client()) : "";
+            dto.dataEntrada = g.getDataEntrada() != null ? g.getDataEntrada().toLocalDate().toString() : "";
             dto.estat = g.getEstat();
 
             // Obtener las pales de este grupo
@@ -97,21 +100,34 @@ public class GrupPalesController {
 
     // Endpoint per crear un nou grup de pales: POST /api/gruppales
     @PostMapping
-    public GrupPales create(@RequestBody GrupPales grup) {
-        if (grup.getDataEntrada() == null) {
+    public GrupPales create(@RequestBody GrupPalesDTO dto) {
+        GrupPales grup = new GrupPales();
+        grup.setReferencia(dto.referencia);
+        grup.setTemporada(dto.temporada);
+        grup.setEstat(dto.estat);
+        if (dto.dataEntrada != null && !dto.dataEntrada.isEmpty()) {
+            grup.setDataEntrada(LocalDateTime.parse(dto.dataEntrada + "T00:00:00"));
+        } else {
             grup.setDataEntrada(LocalDateTime.now());
+        }
+        if (dto.proveidor != null && !dto.proveidor.isEmpty()) {
+            clientRepository.findById(Integer.valueOf(dto.proveidor))
+                .ifPresent(grup::setProveidor);
         }
         return grupPalesService.save(grup);
     }
 
     // Endpoint per a actualitzar un grup de pales: PUT /api/gruppales/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<GrupPales> update(@PathVariable Integer id, @RequestBody GrupPales details) {
+    public ResponseEntity<GrupPales> update(@PathVariable Integer id, @RequestBody GrupPalesDTO dto) {
         return grupPalesService.findById(id).map(grup -> {
-            grup.setReferencia(details.getReferencia());
-            grup.setTemporada(details.getTemporada());
-            grup.setEstat(details.getEstat());
-            grup.setProveidor(details.getProveidor());
+            grup.setReferencia(dto.referencia);
+            grup.setTemporada(dto.temporada);
+            grup.setEstat(dto.estat);
+            if (dto.proveidor != null && !dto.proveidor.isEmpty()) {
+                clientRepository.findById(Integer.valueOf(dto.proveidor))
+                    .ifPresent(grup::setProveidor);
+            }
             return ResponseEntity.ok(grupPalesService.save(grup));
         }).orElse(ResponseEntity.notFound().build());
     }
