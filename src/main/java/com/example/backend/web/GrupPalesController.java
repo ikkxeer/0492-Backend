@@ -106,7 +106,8 @@ public class GrupPalesController {
         grup.setTemporada(dto.temporada);
         grup.setEstat(dto.estat);
         if (dto.dataEntrada != null && !dto.dataEntrada.isEmpty()) {
-            grup.setDataEntrada(LocalDateTime.parse(dto.dataEntrada + "T00:00:00"));
+            String dataStr = dto.dataEntrada.contains("T") ? dto.dataEntrada : dto.dataEntrada + "T00:00:00";
+            grup.setDataEntrada(LocalDateTime.parse(dataStr));
         } else {
             grup.setDataEntrada(LocalDateTime.now());
         }
@@ -124,10 +125,40 @@ public class GrupPalesController {
             grup.setReferencia(dto.referencia);
             grup.setTemporada(dto.temporada);
             grup.setEstat(dto.estat);
+            if (dto.dataEntrada != null && !dto.dataEntrada.isEmpty()) {
+                String dataStr = dto.dataEntrada.contains("T") ? dto.dataEntrada : dto.dataEntrada + "T00:00:00";
+                grup.setDataEntrada(LocalDateTime.parse(dataStr));
+            }
             if (dto.proveidor != null && !dto.proveidor.isEmpty()) {
                 clientRepository.findById(Integer.valueOf(dto.proveidor))
                     .ifPresent(grup::setProveidor);
             }
+
+            // Actualitza les pales directament sobre la col·lecció del grup
+            // (la CascadeType.ALL ja farà el save en guardar el grup)
+            if (dto.pales != null && grup.getPales() != null) {
+                dto.pales.forEach(paleDTO -> {
+                    grup.getPales().stream()
+                        .filter(p -> String.valueOf(p.getId_pale()).equals(paleDTO.id))
+                        .findFirst()
+                        .ifPresent(pale -> {
+                            pale.setLot(paleDTO.lot);
+                            pale.setSscc(paleDTO.sscc);
+                            pale.setEstat(paleDTO.estat);
+                            pale.setPaquets(paleDTO.paquets);
+                            pale.setMesures(paleDTO.mesures);
+                            // ✅ Corregit: ara s'actualitza el pes
+                            pale.setPes(paleDTO.pes != null
+                                ? java.math.BigDecimal.valueOf(paleDTO.pes) : null);
+                            if (paleDTO.dataExpedicio != null && !paleDTO.dataExpedicio.isEmpty()) {
+                                pale.setData_expedicio(
+                                    LocalDateTime.parse(paleDTO.dataExpedicio + "T00:00:00"));
+                            }
+                        });
+                });
+            }
+
+            // Un sol save — la cascada guarda les pales actualitzades
             return ResponseEntity.ok(grupPalesService.save(grup));
         }).orElse(ResponseEntity.notFound().build());
     }

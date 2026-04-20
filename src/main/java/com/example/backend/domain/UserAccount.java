@@ -2,6 +2,7 @@ package com.example.backend.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Taula 'usauri' representada amb getters i setters
@@ -39,6 +40,20 @@ public class UserAccount {
     private boolean estat;
     @Column(name = "ultim_acces")
     private LocalDateTime ultimAcces;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "grupmozos_usuaris",
+        joinColumns = @JoinColumn(name = "id_usuari"),
+        inverseJoinColumns = @JoinColumn(name = "id_grup")
+    )
+    private List<GrupMozos> grups;
+    
+    @OneToMany(mappedBy = "usuari", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tracking> trackings;
+
+    @OneToMany(mappedBy = "gestor", cascade = CascadeType.ALL)
+    private List<Ordre> ordresGestionades;
 
     // GETERS
     public Integer getId() { return id; }

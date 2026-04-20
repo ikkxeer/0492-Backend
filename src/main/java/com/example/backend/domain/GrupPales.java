@@ -45,7 +45,7 @@ public class GrupPales {
     private Client proveidor; 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "grupPales", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "grupPales", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Pale> pales;
 
     // GETTERS

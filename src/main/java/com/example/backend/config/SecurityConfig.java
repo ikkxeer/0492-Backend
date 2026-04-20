@@ -53,6 +53,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/ordres/**").permitAll()
                 // Grup mozos público
                 .requestMatchers("/api/client/**").permitAll()
+                // Incidencias público
+                .requestMatchers("/api/incidencies/**").permitAll()
                 // Resto protegido
                 .anyRequest().authenticated()
                 )

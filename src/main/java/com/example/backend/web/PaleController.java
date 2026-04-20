@@ -4,8 +4,13 @@
  */
 package com.example.backend.web;
 
+import com.example.backend.domain.GrupPales;
 import com.example.backend.domain.Pale;
+import com.example.backend.repo.GrupPalesRepository;
+import com.example.backend.repo.PaleRepository;
 import com.example.backend.service.PaleService;
+import com.example.backend.web.dto.GrupPalesDTO;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +43,13 @@ public class PaleController {
     // Atrbiuts de la classe
     @Autowired
     private PaleService paleService;
+    
+    @Autowired
+    private PaleRepository paleRepository;
+    
+    @Autowired
+    private GrupPalesRepository grupPalesRepository;
+
 
     // Endpoint para obtener el total: GET /api/pales/total
     @GetMapping("/total")
@@ -60,43 +72,57 @@ public class PaleController {
     
     // Endpoint per crear un pale: POST /api/pales
     @PostMapping
-    public Pale create(@RequestBody Pale pale) {
-        return paleService.savePale(pale);
+    public ResponseEntity<Pale> create(@RequestParam Integer grupId, @RequestBody GrupPalesDTO.PaleDTO dto) {
+        return grupPalesRepository.findById(grupId).map(grup -> {
+            Pale pale = new Pale();
+            pale.setLot(dto.lot);
+            pale.setSscc(dto.sscc);
+            pale.setEstat(dto.estat);
+            pale.setPaquets(dto.paquets);
+            pale.setMesures(dto.mesures);
+
+            if (dto.pes != null) pale.setPes(java.math.BigDecimal.valueOf(dto.pes));
+            if (dto.dataExpedicio != null && !dto.dataExpedicio.isEmpty()) {
+                String dataStr = dto.dataExpedicio.contains("T") ? dto.dataExpedicio : dto.dataExpedicio + "T00:00:00";
+                pale.setData_expedicio(LocalDateTime.parse(dataStr));
+            }
+            pale.setGrupPales(grup); 
+
+            return ResponseEntity.ok(paleRepository.save(pale));
+        }).orElse(ResponseEntity.notFound().build());
     }
     
     // Endpoint per editar un pale: PUT /api/pales/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<Pale> update(@PathVariable Integer id, @RequestBody Pale paleDetails) {
-        return paleService.findPaleById(id).map(pale -> {
-            
-            // Actualitzem els camps del pale que hem rebut
-            pale.setLot(paleDetails.getLot());
-            pale.setSscc(paleDetails.getSscc());
-            pale.setPes(paleDetails.getPes());
-            pale.setMesures(paleDetails.getMesures());
-            pale.setPaquets(paleDetails.getPaquets());
-            pale.setEstat(paleDetails.getEstat());
-            
-            // Actualitzem el pale
-            Pale updated = paleService.savePale(pale);
-            
-            // Retornem al resposta
-            return ResponseEntity.ok(updated);
-            
+    public ResponseEntity<Pale> update(@PathVariable Integer id, @RequestBody GrupPalesDTO.PaleDTO dto) {
+        return paleRepository.findById(id).map(pale -> {
+            pale.setLot(dto.lot);
+            pale.setSscc(dto.sscc);
+            pale.setEstat(dto.estat);
+            pale.setPaquets(dto.paquets);
+            pale.setMesures(dto.mesures);
+            if (dto.pes != null) pale.setPes(java.math.BigDecimal.valueOf(dto.pes));
+            if (dto.dataExpedicio != null && !dto.dataExpedicio.isEmpty()) {
+                pale.setData_expedicio(LocalDateTime.parse(dto.dataExpedicio + "T00:00:00"));
+            }
+            return ResponseEntity.ok(paleRepository.save(pale));
         }).orElse(ResponseEntity.notFound().build());
     }
     
     // Endpoint per eliminar un pale: DELETE /api/pales/{id} 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        // Si el pale existeix
-        if (paleService.findPaleById(id).isPresent()) {
-            // Eliminem el pale
-            paleService.deletePale(id);
-            
-            // Retornem la resposta
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Object> delete(@PathVariable Integer id) {
+        return paleRepository.findById(id).map(pale -> {
+            GrupPales grup = pale.getGrupPales();
+            if (grup != null) {
+                // Elimina la pale de la llista del grup i deixa que CascadeType.ALL faci la feina
+                grup.getPales().removeIf(p -> p.getId_pale().equals(id));
+                grupPalesRepository.save(grup);
+            } else {
+                // Pale sense grup, ho elimina directament
+                paleRepository.deleteById(id);
+            }
+            return ResponseEntity.<Void>ok().build();
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

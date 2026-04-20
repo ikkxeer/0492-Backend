@@ -1,0 +1,74 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.example.backend.domain;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+/**
+ *
+ * @author samui
+ */
+@Entity
+@Table(name = "incidencia_historial")
+public class EntradaHistorial {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String accio;
+    private String descripcio;
+    private LocalDateTime dataHora;
+    private String autor;
+
+    public EntradaHistorial() {}
+    public EntradaHistorial(String accio, String descripcio, String autor) {
+        this.accio = accio;
+        this.descripcio = descripcio;
+        this.autor = autor;
+        this.dataHora = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getAccio() {
+        return accio;
+    }
+
+    public String getDescripcio() {
+        return descripcio;
+    }
+
+    public LocalDateTime getDataHora() {
+        return dataHora;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAccio(String accio) {
+        this.accio = accio;
+    }
+
+    public void setDescripcio(String descripcio) {
+        this.descripcio = descripcio;
+    }
+
+    public void setDataHora(LocalDateTime dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+    
+    
+}

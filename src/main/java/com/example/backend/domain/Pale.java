@@ -55,6 +55,11 @@ public class Pale {
     public LocalDateTime getData_expedicio() { return data_expedicio; }
     public String getEstat() { return estat; }
 
+    public GrupPales getGrupPales() {
+        return grupPales;
+    }
+    
+
     // Setters
     public void setEstat(String estat) { this.estat = estat; }
 
@@ -83,5 +88,12 @@ public class Pale {
     public void setData_expedicio(LocalDateTime data_expedicio) {
         this.data_expedicio = data_expedicio;
     }
+
+    public void setGrupPales(GrupPales grupPales) {
+        this.grupPales = grupPales;
+    }
+    
+    
+    
     
 }
