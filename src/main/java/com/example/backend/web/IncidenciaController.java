@@ -9,20 +9,20 @@ import com.example.backend.service.IncidenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 /**
  *
  * @author samui
  */
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/incidencies")
-@CrossOrigin(origins = "*")
 public class IncidenciaController {
 
     @Autowired
     private IncidenciaService service;
 
-    // Coincide con obtenirIncidencies(rol, userId) del frontend
     @GetMapping
     public List<Incidencia> listar(
             @RequestParam String rol, 
@@ -30,8 +30,19 @@ public class IncidenciaController {
         return service.obtenerSegunRol(rol, userId);
     }
 
+    // He dejado solo uno de los @PostMapping
     @PostMapping
-    public Incidencia guardar(@RequestBody Incidencia inc) {
+    public Incidencia crear(@RequestBody Incidencia inc) {
         return service.crear(inc);
+    }
+    
+    @PatchMapping("/{id}/estat")
+    public ResponseEntity<Incidencia> modificarEstat(
+            @PathVariable Integer id,
+            @RequestParam String nouEstat,
+            @RequestParam String autor) {
+        
+        Incidencia actualizada = service.actualizarEstado(id, nouEstat, autor);
+        return ResponseEntity.ok(actualizada);
     }
 }

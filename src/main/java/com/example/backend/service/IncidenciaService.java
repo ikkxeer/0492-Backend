@@ -49,4 +49,23 @@ public class IncidenciaService {
         
         return repo.save(inc);
     }
+    
+    public Incidencia actualizarEstado(Integer id, String nuevoEstado, String autor) {
+        Incidencia inc = repo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));
+
+        inc.setEstat(nuevoEstado);
+
+        EntradaHistorial entrada = new EntradaHistorial();
+        entrada.setAccio("Estat actualitzat");
+        entrada.setDescripcio("L'estat ha canviat a: " + nuevoEstado);
+        entrada.setDataHora(LocalDateTime.now());
+        entrada.setAutor(autor);
+
+        entrada.setIncidencia(inc); 
+
+        inc.getHistorial().add(entrada);
+
+        return repo.save(inc);
+    }
 }

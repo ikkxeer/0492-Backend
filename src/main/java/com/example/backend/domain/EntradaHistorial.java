@@ -21,6 +21,10 @@ public class EntradaHistorial {
     private String descripcio;
     private LocalDateTime dataHora;
     private String autor;
+    
+    @ManyToOne
+    @JoinColumn(name = "incidencia_id")
+    private Incidencia incidencia;
 
     public EntradaHistorial() {}
     public EntradaHistorial(String accio, String descripcio, String autor) {
@@ -69,6 +73,12 @@ public class EntradaHistorial {
     public void setAutor(String autor) {
         this.autor = autor;
     }
+
+    public void setIncidencia(Incidencia incidencia) {
+        this.incidencia = incidencia;
+    }
+    
+    
     
     
 }

@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/client/**").permitAll()
                 // Incidencias público
                 .requestMatchers("/api/incidencies/**").permitAll()
-                // Resto protegido
+                 // Resto protegido
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
@@ -66,7 +66,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         return new UrlBasedCorsConfigurationSource() {{ registerCorsConfiguration("/api/**", config); }};
