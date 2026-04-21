@@ -4,6 +4,8 @@
  */
 package com.example.backend.domain;
 
+import com.example.backend.domain.enums.TipusIncidencia;
+import com.example.backend.domain.enums.PrioritatIncidencia;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
