@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author samui
+ * Taula 'incidencia' representada amb getters i setters
+ * 
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @Entity
 @Table(name = "incidencia")
 public class Incidencia {
+    
+    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_incidencia;
@@ -28,7 +31,7 @@ public class Incidencia {
     @Column(columnDefinition = "TEXT")
     private String descripcio;
 
-    private String estat; // o usar Enum si prefieres
+    private String estat;
 
     @Enumerated(EnumType.STRING)
     private PrioritatIncidencia prioritat;
@@ -37,10 +40,10 @@ public class Incidencia {
     private TipusIncidencia tipus;
 
     @Column(name = "reportat_per")
-    private Integer reportatPer; // FK a usuari(id)
+    private Integer reportatPer;
 
     @Column(name = "assignat_a")
-    private Integer assignatA;   // FK a grupmozos(id_grup)
+    private Integer assignatA;
 
     @Column(name = "data_creacio")
     private LocalDateTime dataCreacio;
@@ -49,6 +52,7 @@ public class Incidencia {
     @JoinColumn(name = "incidencia_id")
     private List<EntradaHistorial> historial = new ArrayList<>();
 
+    // Getters
     public Integer getId_incidencia() {
         return id_incidencia;
     }
@@ -93,6 +97,7 @@ public class Incidencia {
         return historial;
     }
 
+    // Setters
     public void setId_incidencia(Integer id_incidencia) {
         this.id_incidencia = id_incidencia;
     }
@@ -136,7 +141,5 @@ public class Incidencia {
     public void setHistorial(List<EntradaHistorial> historial) {
         this.historial = historial;
     }
-
-    
     
 }

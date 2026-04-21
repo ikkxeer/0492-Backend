@@ -5,8 +5,9 @@
 package com.example.backend.domain;
 
 /**
- *
- * @author samui
+ * Enumeracions dels possibles estats de prioritat de les incidencies
+ * 
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public enum PrioritatIncidencia {
     alta, mitjana, baixa

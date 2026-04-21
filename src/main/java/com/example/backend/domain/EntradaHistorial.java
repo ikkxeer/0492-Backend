@@ -8,12 +8,32 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- *
- * @author samui
+ * Taula 'incidencia_historial' representada amb getters i setters
+ * 
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @Entity
 @Table(name = "incidencia_historial")
 public class EntradaHistorial {
+    
+    // Constructor per defecte
+    public EntradaHistorial() {}
+    
+    /**
+     * Constructor parametritzat de la classe
+     * 
+     * @param accio Accio de la incidencia
+     * @param descripcio Descripcio de la incidencia
+     * @param autor Autor de la incidencia
+     */
+    public EntradaHistorial(String accio, String descripcio, String autor) {
+        this.accio = accio;
+        this.descripcio = descripcio;
+        this.autor = autor;
+        this.dataHora = LocalDateTime.now();
+    }
+    
+    // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,15 +45,8 @@ public class EntradaHistorial {
     @ManyToOne
     @JoinColumn(name = "incidencia_id")
     private Incidencia incidencia;
-
-    public EntradaHistorial() {}
-    public EntradaHistorial(String accio, String descripcio, String autor) {
-        this.accio = accio;
-        this.descripcio = descripcio;
-        this.autor = autor;
-        this.dataHora = LocalDateTime.now();
-    }
-
+    
+    // Getters
     public Long getId() {
         return id;
     }
@@ -53,7 +66,8 @@ public class EntradaHistorial {
     public String getAutor() {
         return autor;
     }
-
+    
+    // Setters
     public void setId(Long id) {
         this.id = id;
     }
@@ -77,8 +91,5 @@ public class EntradaHistorial {
     public void setIncidencia(Incidencia incidencia) {
         this.incidencia = incidencia;
     }
-    
-    
-    
-    
+      
 }
