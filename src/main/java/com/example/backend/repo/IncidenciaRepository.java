@@ -16,9 +16,11 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer> {
     
+    // Troba una incidencia reportada per un usuari en especific
     @Query("SELECT i FROM Incidencia i WHERE i.reportatPer = :userId")
     List<Incidencia> findByReportatPer(@Param("userId") Integer userId);
 
+    // Troba una incidencia assignada a un usuari en especific
     @Query("SELECT i FROM Incidencia i WHERE i.assignatA = :userId")
     List<Incidencia> findByAssignatA(@Param("userId") Integer userId);
 }

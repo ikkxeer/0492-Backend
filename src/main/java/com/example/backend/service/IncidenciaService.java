@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
+ * Service per les incidencies
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @Service
 public class IncidenciaService {
@@ -20,6 +21,7 @@ public class IncidenciaService {
     @Autowired
     private IncidenciaRepository repo;
 
+    // Retorna les incidencies segons el rol
     public List<Incidencia> obtenerSegunRol(String rol, Integer userId) {
         if ("ADMIN".equals(rol)) return repo.findAll();
         
@@ -35,6 +37,7 @@ public class IncidenciaService {
         return List.of();
     }
 
+    // Crea una incidencia
     public Incidencia crear(Incidencia inc) {
         inc.setDataCreacio(LocalDateTime.now()); 
         inc.setEstat("obert");
@@ -50,6 +53,7 @@ public class IncidenciaService {
         return repo.save(inc);
     }
     
+    // Actualitza l'estat d'una incidencia
     public Incidencia actualizarEstado(Integer id, String nuevoEstado, String autor) {
         Incidencia inc = repo.findById(id)
             .orElseThrow(() -> new RuntimeException("Incidencia no encontrada"));

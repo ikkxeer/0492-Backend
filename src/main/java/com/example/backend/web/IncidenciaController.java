@@ -12,6 +12,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 /**
+ * Controlador per incidencies
+ * * /api/incidencies: retorna les incidencies segons el rol
+ * - POST: crea una incidencia passada per parametre
+ * - PATCH /{id}/estat: actualitza l'estat d'una incidencia
  *
  * @author samui
  */
@@ -20,9 +24,11 @@ import org.springframework.http.ResponseEntity;
 @RequestMapping("/api/incidencies")
 public class IncidenciaController {
 
+    // Atributs de la classe
     @Autowired
     private IncidenciaService service;
 
+    // Endpoint per obtenir unes incidencies segons rol: GET /api/incidencies
     @GetMapping
     public List<Incidencia> listar(
             @RequestParam String rol, 
@@ -30,12 +36,13 @@ public class IncidenciaController {
         return service.obtenerSegunRol(rol, userId);
     }
 
-    // He dejado solo uno de los @PostMapping
+    // Endpoint per crear una incidencia: POST /api/incidencies
     @PostMapping
     public Incidencia crear(@RequestBody Incidencia inc) {
         return service.crear(inc);
     }
     
+    // Endpoint per a modificar l'estat d'una incidencia: PATCH /api/incidencies/{id}/estat
     @PatchMapping("/{id}/estat")
     public ResponseEntity<Incidencia> modificarEstat(
             @PathVariable Integer id,
