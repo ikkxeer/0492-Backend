@@ -28,12 +28,11 @@ public class OrdreDTO {
     public List<TrackingDTO> historial;
 
     /**
-     * Constructor de Ordre
+     * Constructor de Ordre parametritzat
      * 
      * @param o Ordre base
      */
     public OrdreDTO(Ordre o) {
-        // Omplim els atributs
         this.id_ordre = o.getId_ordre();
         this.identificador = o.getIdentificador();
         this.dataCreacio = o.getData_creacio().toString();

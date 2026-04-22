@@ -15,10 +15,10 @@ import java.util.List;
  * Controlador per ordres
  *
  * /api/ordres: Retorna les ordres filtrades per rol:
- *   rolId=1 (ADMIN)         → totes les ordres
- *   rolId=2 (GESTOR)        → ordres on ell és el gestor (?nom=)
- *   rolId=3 (MOZO)          → ordres del seu grup de mozos (?nom=)
- *   rolId=4 (TRANSPORTISTA) → ordres assignades a ell (?nom=)
+ *   rolId=1 (ADMIN): totes les ordres
+ *   rolId=2 (GESTOR): ordres on ell és el gestor (?nom=)
+ *   rolId=3 (MOZO): ordres del seu grup de mozos (?nom=)
+ *   rolId=4 (TRANSPORTISTA): ordres assignades a ell (?nom=)
  *
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
