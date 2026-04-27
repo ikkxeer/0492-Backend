@@ -6,6 +6,7 @@ package com.example.backend.repo;
 
 import com.example.backend.domain.Ordre;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,4 +37,7 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
                    "WHERE u.nom = :nom",
            nativeQuery = true)
     List<Ordre> findByTransportistaNom(@Param("nom") String nom);
+    
+    @Query("SELECT o FROM Ordre o LEFT JOIN FETCH o.pales WHERE o.identificador = :id")
+    Optional<Ordre> findByIdentificadorWithPales(@Param("id") String id);
 }

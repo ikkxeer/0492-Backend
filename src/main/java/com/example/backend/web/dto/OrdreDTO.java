@@ -3,21 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.backend.web.dto;
+
 import com.example.backend.domain.Ordre;
+import com.example.backend.domain.Pale;
 import com.example.backend.domain.Tracking;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DTO que representa una Ordre
- *
- * @author Iker Aramburu, Pau Vico i Steeven Bagner
- */
 public class OrdreDTO {
-    // Atributs de la classe
     public Integer id_ordre;
     public String identificador;
     public String gestorResponsable;
+    public Integer idGestor;
     public String dataCreacio;
     public String estat;
     public String adreca;
@@ -26,42 +23,49 @@ public class OrdreDTO {
     public Double pesTotal;
     public Integer quantitatPales;
     public List<TrackingDTO> historial;
+    public List<Integer> paleIds; 
 
-    /**
-     * Constructor de Ordre parametritzat
-     * 
-     * @param o Ordre base
-     */
+    public String telefon;
+    public String temporada;
+    public String prioritat;
+    public Double preu;
+    public String tendaDestinataria;
+
+    public OrdreDTO() {}
+
     public OrdreDTO(Ordre o) {
         this.id_ordre = o.getId_ordre();
         this.identificador = o.getIdentificador();
-        this.dataCreacio = o.getData_creacio().toString();
         this.estat = o.getEstat();
         this.adreca = o.getAdreca();
         this.ciutat = o.getCiutat();
         this.cp = o.getCp();
-        this.quantitatPales = o.getQuantitatPales();
+        this.tendaDestinataria = o.getTendaDestinataria();
+        
+        this.telefon = o.getTelefon();
+        this.temporada = o.getTemporada();
+        this.prioritat = o.getPrioritat();
+        this.preu = (o.getPreu() != null) ? o.getPreu().doubleValue() : 0.0;
+        
+        if (o.getData_creacio() != null) {
+            this.dataCreacio = o.getData_creacio().toString();
+        }
 
-        // Si el gestor no es null omplim amb el nom, sino amb "Sense Gestor"
         if (o.getGestor() != null) {
             this.gestorResponsable = o.getGestor().getNom();
-        } else {
-            this.gestorResponsable = "Sense gestor";
+            this.idGestor = o.getGestor().getId();
         }
 
-        // Si té pes, el possem, sino possem 0.0
         if (o.getPesTotal() != null) {
             this.pesTotal = o.getPesTotal().doubleValue();
-        } else {
-            this.pesTotal = 0.0;
         }
 
-        // Si té historial el possem
-        this.historial = new ArrayList<>();
-        if (o.getHistorial() != null) {
-            for (Tracking t : o.getHistorial()) {
-                this.historial.add(new TrackingDTO(t));
+        this.paleIds = new ArrayList<>();
+        if (o.getPales() != null) {
+            for (Pale p : o.getPales()) {
+                this.paleIds.add(p.getId_pale()); 
             }
+            this.quantitatPales = o.getPales().size();
         }
     }
 }

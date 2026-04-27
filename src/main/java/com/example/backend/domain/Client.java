@@ -58,5 +58,4 @@ public class Client {
         this.telefon = telefon;
     }
     
-
 }

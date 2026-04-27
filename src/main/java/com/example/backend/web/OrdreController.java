@@ -5,11 +5,13 @@
 package com.example.backend.web;
 
 import com.example.backend.service.OrdreService;
+import com.example.backend.web.dto.OrdreCreateDTO;
 import com.example.backend.web.dto.OrdreDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 
 /**
  * Controlador per ordres
@@ -73,5 +75,12 @@ public class OrdreController {
         return ordreService.findByIdentificador(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    
+    // Endpoint per crear una nova ordre: POST /api/ordres
+    @PostMapping
+    public ResponseEntity<OrdreDTO> crear(@RequestBody OrdreCreateDTO dto) {
+        OrdreDTO nueva = ordreService.crear(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
     }
 }
