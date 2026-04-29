@@ -1,5 +1,6 @@
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,8 @@ public class UserAccount {
     private String email;
     @Column(name = "telefon")
     private String telefon;
+    
+    @JsonIgnore
     @Column(name = "contrasenya")
     private String contrasenya;
     @Column(name = "departament")
@@ -42,6 +45,7 @@ public class UserAccount {
     private LocalDateTime ultimAcces;
     
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
         name = "grupmozos_usuaris",
         joinColumns = @JoinColumn(name = "id_usuari"),
@@ -50,9 +54,11 @@ public class UserAccount {
     private List<GrupMozos> grups;
     
     @OneToMany(mappedBy = "usuari", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Tracking> trackings;
 
     @OneToMany(mappedBy = "gestor", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Ordre> ordresGestionades;
     
     // Getters
