@@ -72,6 +72,9 @@ public class Ordre {
     @JoinColumn(name = "id_grup_mozos")
     private GrupMozos grupMozos;
 
+    @Column(name = "codi_albara", length = 50, unique = true)
+    private String codiAlbara;
+    
     @ManyToMany
     @JoinTable(
         name = "ordre_pale",
@@ -90,6 +93,10 @@ public class Ordre {
     
     public String getTendaDestinataria() {
         return tendaDestinataria;
+    }
+    
+    public String getCodiAlbara() {
+        return codiAlbara;
     }
 
     public String getIdentificador() {
@@ -159,7 +166,7 @@ public class Ordre {
     public List<Pale> getPales() {
         return pales;
     }
-
+    
     // Setters
     public void setId_ordre(Integer id_ordre) {
         this.id_ordre = id_ordre;
@@ -235,5 +242,9 @@ public class Ordre {
     
     public void setTendaDestinataria(String tendaDestinataria) {
         this.tendaDestinataria = tendaDestinataria;
+    }
+    
+    public void setCodiAlbara(String codiAlbara) {
+        this.codiAlbara = codiAlbara;
     }
 }

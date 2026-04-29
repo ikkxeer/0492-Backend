@@ -6,6 +6,7 @@ package com.example.backend.service;
 
 import com.example.backend.domain.Ordre;
 import com.example.backend.domain.Pale;
+import com.example.backend.domain.UserAccount;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.backend.repo.OrdreRepository;
@@ -157,4 +158,59 @@ public class OrdreService {
             throw new RuntimeException("L'ordre no existeix");
         }
     }
+    
+    // Confirmar orden
+    @Transactional
+    public OrdreDTO confirmar(Integer id) {
+        Ordre o = ordreRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
+
+        // Validar que esté en borrador
+        if (!"ESBORRANY".equals(o.getEstat())) {
+            throw new RuntimeException("Només es poden confirmar ordres en estat ESBORRANY");
+        }
+
+        // Cambiar estado
+        o.setEstat("PENDENT_PREPARACIO");
+
+        // Generar código de Albarán
+        String codiAlbara = "ALB-" + LocalDateTime.now().getYear() + "-" + (10000 + o.getId_ordre());
+        o.setCodiAlbara(codiAlbara);
+
+        // Asegurar que los pales pasen a reservado (si no se hizo en el create)
+        if (o.getPales() != null) {
+            o.getPales().forEach(p -> p.setEstat("reservat"));
+        }
+
+        Ordre guardada = ordreRepository.save(o);
+        return new OrdreDTO(guardada);
+    }
+    
+    /**
+     * Canvia l'estat d'una ordre manualment
+     */
+    @Transactional
+    public OrdreDTO canviarEstat(Integer id, String nouEstat) {
+        Ordre o = ordreRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
+
+        o.setEstat(nouEstat);
+        Ordre guardada = ordreRepository.save(o);
+        return new OrdreDTO(guardada);
+    }
+    
+    /**
+    * Assigna un transportista a una ordre
+    */
+   @Transactional
+   public OrdreDTO assignarTransportista(Integer id, Integer transportistaId) {
+       Ordre o = ordreRepository.findById(id)
+               .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
+
+       userRepository.findById(transportistaId).ifPresent(o::setTransportista);
+
+       Ordre guardada = ordreRepository.save(o);
+       return new OrdreDTO(guardada);
+   }
+
 }

@@ -99,6 +99,39 @@ public class OrdreController {
         }
     }
     
+    @PutMapping("/{id}/confirmar")
+    public ResponseEntity<OrdreDTO> confirmar(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(ordreService.confirmar(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}/estat")
+    public ResponseEntity<OrdreDTO> canviarEstat(
+            @PathVariable Integer id,
+            @RequestParam String nouEstat
+    ) {
+        try {
+            return ResponseEntity.ok(ordreService.canviarEstat(id, nouEstat));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PutMapping("/{id}/transportista")
+    public ResponseEntity<OrdreDTO> assignarTransportista(
+            @PathVariable Integer id,
+            @RequestParam Integer transportistaId
+    ) {
+        try {
+            return ResponseEntity.ok(ordreService.assignarTransportista(id, transportistaId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
     // Endpoint per eliminar una ordre: DELETE /api/ordres/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {

@@ -28,6 +28,8 @@ public class OrdreDTO {
     public String prioritat;
     public Double preu;
     public String tendaDestinataria;
+    public String codiAlbara;
+    public String transportista;
 
     public OrdreDTO() {}
 
@@ -39,11 +41,13 @@ public class OrdreDTO {
         this.ciutat = o.getCiutat();
         this.cp = o.getCp();
         this.tendaDestinataria = o.getTendaDestinataria();
-        
+        this.codiAlbara = o.getCodiAlbara();
         this.telefon = o.getTelefon();
         this.temporada = o.getTemporada();
         this.prioritat = o.getPrioritat();
         this.preu = (o.getPreu() != null) ? o.getPreu().doubleValue() : 0.0;
+        
+        this.transportista = o.getTransportista() != null ? o.getTransportista().getNom() : null;
         
         if (o.getData_creacio() != null) {
             this.dataCreacio = o.getData_creacio().toString();
