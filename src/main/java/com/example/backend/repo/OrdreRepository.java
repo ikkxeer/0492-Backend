@@ -18,12 +18,14 @@ import org.springframework.data.repository.query.Param;
  */
 public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
 
+    // Sacamos las órdenes filtrando por el nombre del gestor asignado
     @Query(value = "SELECT o.* FROM ordre o " +
                    "INNER JOIN usuari u ON o.id_gestor = u.id " +
                    "WHERE u.nom = :nom",
            nativeQuery = true)
     List<Ordre> findByGestorNom(@Param("nom") String nom);
 
+    // Buscamos órdenes asociadas a un mozo navegando a través de los grupos y la tabla intermedia.
     @Query(value = "SELECT o.* FROM ordre o " +
                    "INNER JOIN grupmozos gm ON o.id_grup_mozos = gm.id_grup " +
                    "INNER JOIN grupmozos_usuaris gmu ON gm.id_grup = gmu.id_grup " +
@@ -32,12 +34,14 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
            nativeQuery = true)
     List<Ordre> findByGrupoMozoUsuarioNom(@Param("nomMozo") String nomMozo);
 
+    // Buscamos órdenes que tiene asignadas un transportista específico por su nombre
     @Query(value = "SELECT o.* FROM ordre o " +
                    "INNER JOIN usuari u ON o.id_transportista = u.id " +
                    "WHERE u.nom = :nom",
            nativeQuery = true)
     List<Ordre> findByTransportistaNom(@Param("nom") String nom);
     
+    // Buscamos por ID cargando pales del tirón para evitar excepciones
     @Query("SELECT o FROM Ordre o LEFT JOIN FETCH o.pales WHERE o.identificador = :id")
     Optional<Ordre> findByIdentificadorWithPales(@Param("id") String id);
 }
