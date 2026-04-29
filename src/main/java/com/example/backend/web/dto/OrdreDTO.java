@@ -6,7 +6,6 @@ package com.example.backend.web.dto;
 
 import com.example.backend.domain.Ordre;
 import com.example.backend.domain.Pale;
-import com.example.backend.domain.Tracking;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class OrdreDTO {
     public Integer quantitatPales;
     public List<TrackingDTO> historial;
     public List<Integer> paleIds; 
-
     public String telefon;
     public String temporada;
     public String prioritat;

@@ -22,6 +22,10 @@ import org.springframework.http.HttpStatus;
  *   rolId=3 (MOZO): ordres del seu grup de mozos (?nom=)
  *   rolId=4 (TRANSPORTISTA): ordres assignades a ell (?nom=)
  *
+ * - POST: Crea una nova ordre
+ * - PUT: Actualitza una ordre
+ * - DELETE: Elimina una ordre
+ * 
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @RestController
@@ -100,9 +104,9 @@ public class OrdreController {
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         try {
             ordreService.eliminar(id);
-            return ResponseEntity.noContent().build(); // 204 No Content si va bien
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntity.notFound().build(); // 404 si no existe
+            return ResponseEntity.notFound().build();
         }
     }
 }

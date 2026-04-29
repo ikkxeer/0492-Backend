@@ -66,7 +66,6 @@ public class OrdreService {
     }
 
     // Buscar per identificador (detall)
-    // CORRECCIÓN: Eliminado el método duplicado y añadida la anotación correcta
     @Transactional(readOnly = true)
     public Optional<OrdreDTO> findByIdentificador(String id) {
         return ordreRepository.findAll().stream()
@@ -90,7 +89,7 @@ public class OrdreService {
         o.setPreu(BigDecimal.valueOf(dto.preu != null ? dto.preu : 0.0));
         o.setTendaDestinataria(dto.tendaDestinataria);
         
-        // Estado inicial según tu frontend
+        // Estado inicial
         o.setEstat("ESBORRANY");
         o.setData_creacio(LocalDateTime.now());
         
@@ -143,7 +142,7 @@ public class OrdreService {
         return new OrdreDTO(guardada);
     }
     
-    // Eliminar una ordre per ID (PK de la base de dades)
+    // Eliminar una ordre per ID
     @Transactional
     public void eliminar(Integer id) {
         Optional<Ordre> ordreOpt = ordreRepository.findById(id);
