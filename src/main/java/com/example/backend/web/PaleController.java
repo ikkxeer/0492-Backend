@@ -2,6 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.example.backend.web;
 
 import com.example.backend.domain.GrupPales;
@@ -27,12 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controlador pels pales
- * 
- * /api/pales (GET): Retorna tots els pales
- *  - /total (GET): retorna el total de pales
- *  - POST: Crea un pale passat per el body
- *  - PUT: Actualitza un pale
- *  - DELETE: Elimina un pale
+ * * /api/pales (GET): Retorna tots els pales
+ * - /api/pales/{id} (GET): Retorna un pale especific segons ID
+ * - /total (GET): retorna el total de pales
+ * - POST: Crea un pale passat per el body
+ * - PUT: Actualitza un pale
+ * - DELETE: Elimina un pale
  *
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
@@ -61,6 +65,14 @@ public class PaleController {
     @GetMapping
     public List<Pale> getAll() {
         return paleService.findAllPales();
+    }
+
+    // Endpoint per obtenir un pale en especific segons el id: GET /api/pales/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<Pale> getById(@PathVariable Integer id) {
+        return paleService.findPaleById(id)
+                .map(pale -> ResponseEntity.ok(pale))
+                .orElse(ResponseEntity.notFound().build());
     }
     
     // Endpoint per obtenir tots els pales segons estat passat per parametre: GET /api/pales/total/estado
@@ -125,4 +137,5 @@ public class PaleController {
             return ResponseEntity.<Void>ok().build();
         }).orElse(ResponseEntity.notFound().build());
     }
+    
 }

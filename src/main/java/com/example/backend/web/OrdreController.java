@@ -83,4 +83,26 @@ public class OrdreController {
         OrdreDTO nueva = ordreService.crear(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
     }
+    
+    // Endpoint per actualizar una ordre: PUT /api/ordres/{id}
+    @PutMapping("/{id}")
+    public ResponseEntity<OrdreDTO> actualizar(@PathVariable Integer id, @RequestBody OrdreCreateDTO dto) {
+        try {
+            OrdreDTO actualizada = ordreService.actualizar(id, dto);
+            return ResponseEntity.ok(actualizada);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    // Endpoint per eliminar una ordre: DELETE /api/ordres/{id}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        try {
+            ordreService.eliminar(id);
+            return ResponseEntity.noContent().build(); // 204 No Content si va bien
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build(); // 404 si no existe
+        }
+    }
 }

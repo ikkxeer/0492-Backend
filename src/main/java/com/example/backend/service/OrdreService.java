@@ -114,4 +114,48 @@ public class OrdreService {
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
+    
+    // Actualizar una orden existente
+    @Transactional
+    public OrdreDTO actualizar(Integer id, OrdreCreateDTO dto) {
+        Ordre o = ordreRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
+
+        // Actualizar datos básicos
+        o.setAdreca(dto.adreca);
+        o.setCiutat(dto.ciutat);
+        o.setCp(dto.cp);
+        o.setTelefon(dto.telefon);
+        o.setPrioritat(dto.prioritat);
+        o.setTemporada(dto.temporada);
+        o.setPreu(BigDecimal.valueOf(dto.preu != null ? dto.preu : 0.0));
+        o.setTendaDestinataria(dto.tendaDestinataria);
+
+        // Si se pasan nuevos pales, actualizamos la lista
+        if (dto.paleIds != null) {
+            o.getPales().forEach(p -> p.setEstat("disponible"));
+            List<Pale> nuevosPales = paleRepository.findAllById(dto.paleIds);
+            nuevosPales.forEach(p -> p.setEstat("reservat"));
+            o.setPales(nuevosPales);
+        }
+
+        Ordre guardada = ordreRepository.save(o);
+        return new OrdreDTO(guardada);
+    }
+    
+    // Eliminar una ordre per ID (PK de la base de dades)
+    @Transactional
+    public void eliminar(Integer id) {
+        Optional<Ordre> ordreOpt = ordreRepository.findById(id);
+        if (ordreOpt.isPresent()) {
+            Ordre o = ordreOpt.get();
+            if (o.getPales() != null) {
+                o.getPales().forEach(p -> p.setEstat("disponible"));
+            }
+            
+            ordreRepository.delete(o);
+        } else {
+            throw new RuntimeException("L'ordre no existeix");
+        }
+    }
 }
