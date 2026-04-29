@@ -4,6 +4,7 @@
  */
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -25,6 +26,7 @@ public class Tracking {
     private Integer id_tracking;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_ordre")
     private Ordre ordre;
 
@@ -33,6 +35,7 @@ public class Tracking {
     private LocalDateTime timestamp;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_usuari")
     private UserAccount usuari;
 

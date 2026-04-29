@@ -5,6 +5,7 @@
 package com.example.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class Pale {
 
     @ManyToOne
     @JoinColumn(name = "id_grup_pales")
+    @JsonIgnore
     @JsonBackReference
     private GrupPales grupPales;
 
@@ -39,7 +41,7 @@ public class Pale {
     private String mesures;
     private Integer paquets;
     
-    @JsonProperty("dataExpedicio") // Mapeo de data_expedicio a dataExpedicio
+    @JsonProperty("dataExpedicio")
     @Column(name = "data_expedicio")
     private LocalDateTime data_expedicio;
     

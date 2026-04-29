@@ -1,5 +1,6 @@
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
@@ -41,10 +42,12 @@ public class GrupPales {
     private String estat;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_proveidor", referencedColumnName = "id_client")
     private Client proveidor; 
 
     @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "grupPales", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Pale> pales;
 

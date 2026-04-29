@@ -6,6 +6,7 @@ package com.example.backend.domain;
 
 import com.example.backend.domain.enums.TipusIncidencia;
 import com.example.backend.domain.enums.PrioritatIncidencia;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class Incidencia {
     private LocalDateTime dataCreacio;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     @JoinColumn(name = "incidencia_id")
     private List<EntradaHistorial> historial = new ArrayList<>();
 

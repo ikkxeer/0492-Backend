@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.backend.domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class Albara {
     private String codi;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "id_ordre")
     private Ordre ordre;
 

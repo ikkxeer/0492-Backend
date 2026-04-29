@@ -4,6 +4,7 @@
  */
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -43,6 +44,7 @@ public class EntradaHistorial {
     private String autor;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "incidencia_id")
     private Incidencia incidencia;
     

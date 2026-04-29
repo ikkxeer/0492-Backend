@@ -4,6 +4,7 @@
  */
 package com.example.backend.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ public class Ordre {
     private String identificador;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_gestor")
     private UserAccount gestor;
     
@@ -50,6 +52,7 @@ public class Ordre {
     private Integer quantitatPales;
 
     @OneToMany(mappedBy = "ordre", cascade = CascadeType.ALL)
+    @JsonIgnore
     @OrderBy("timestamp ASC")
     private List<Tracking> historial;
 
@@ -65,10 +68,12 @@ public class Ordre {
     private BigDecimal preu = BigDecimal.ZERO;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_transportista")
     private UserAccount transportista;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_grup_mozos")
     private GrupMozos grupMozos;
 
@@ -76,6 +81,7 @@ public class Ordre {
     private String codiAlbara;
     
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
         name = "ordre_pale",
         joinColumns = @JoinColumn(name = "id_ordre"),
