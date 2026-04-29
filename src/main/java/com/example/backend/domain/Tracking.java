@@ -39,7 +39,7 @@ public class Tracking {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    // GETTERS
+    // Getters
     public Integer getId_tracking() {
         return id_tracking;
     }
@@ -68,7 +68,7 @@ public class Tracking {
         return notes;
     }
 
-    // SETTERS
+    // Setters
     public void setId_tracking(Integer id_tracking) {
         this.id_tracking = id_tracking;
     }

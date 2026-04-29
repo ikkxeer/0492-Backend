@@ -48,7 +48,7 @@ public class GrupPales {
     @OneToMany(mappedBy = "grupPales", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Pale> pales;
 
-    // GETTERS
+    // Getters
     public Integer getId_grup_pales() {
         return id_grup_pales;
     }
@@ -77,7 +77,7 @@ public class GrupPales {
         return proveidor;
     }
 
-    // SETTERS
+    // Setters
     public void setId_grup_pales(Integer id_grup_pales) {
         this.id_grup_pales = id_grup_pales;
     }

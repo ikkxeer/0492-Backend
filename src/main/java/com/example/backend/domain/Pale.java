@@ -93,7 +93,4 @@ public class Pale {
         this.grupPales = grupPales;
     }
     
-    
-    
-    
 }

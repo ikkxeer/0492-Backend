@@ -54,16 +54,51 @@ public class UserAccount {
 
     @OneToMany(mappedBy = "gestor", cascade = CascadeType.ALL)
     private List<Ordre> ordresGestionades;
+    
+    // Getters
+    public Integer getId() {
+        return id;
+    }
 
-    // GETERS
-    public Integer getId() { return id; }
-    public String getNom() { return nom; }
-    public String getEmail() { return email; }
-    public String getContrasenya() { return contrasenya; }
-    public String getTelefon() { return telefon; }
-    public String getDepartament() { return departament; }
-    public String getUbicacio() { return ubicacio; }
-    public Integer getIdRol() { return idRol; }
+    public String getNom() {
+        return nom;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelefon() {
+        return telefon;
+    }
+
+    public String getContrasenya() {
+        return contrasenya;
+    }
+
+    public String getDepartament() {
+        return departament;
+    }
+
+    public String getUbicacio() {
+        return ubicacio;
+    }
+
+    public Integer getIdRol() {
+        return idRol;
+    }
+
+    public List<GrupMozos> getGrups() {
+        return grups;
+    }
+
+    public List<Tracking> getTrackings() {
+        return trackings;
+    }
+
+    public List<Ordre> getOrdresGestionades() {    
+        return ordresGestionades;
+    }
 
     public boolean isEstat() {
         return estat;
@@ -73,7 +108,7 @@ public class UserAccount {
         return ultimAcces;
     }
     
-
+    // Setters
     public void setContrasenya(String contrasenya) {
         this.contrasenya = contrasenya;
     }
@@ -113,7 +148,5 @@ public class UserAccount {
     public void setUltimAcces(LocalDateTime ultimAcces) {
         this.ultimAcces = ultimAcces;
     }
-    
-    
     
 }

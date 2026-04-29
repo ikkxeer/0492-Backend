@@ -84,7 +84,6 @@ public class Ordre {
     private String tendaDestinataria;
 
     // Getters
-    
     public Integer getId_ordre() {
         return id_ordre;
     }
@@ -162,7 +161,6 @@ public class Ordre {
     }
 
     // Setters
-    
     public void setId_ordre(Integer id_ordre) {
         this.id_ordre = id_ordre;
     }
