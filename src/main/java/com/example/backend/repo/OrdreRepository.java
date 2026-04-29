@@ -41,7 +41,7 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
            nativeQuery = true)
     List<Ordre> findByTransportistaNom(@Param("nom") String nom);
     
-    // Buscamos por ID cargando pales del tirón para evitar excepciones
+    // Buscamos por una orden con los pales incluidos (todo junto)
     @Query("SELECT o FROM Ordre o LEFT JOIN FETCH o.pales WHERE o.identificador = :id")
     Optional<Ordre> findByIdentificadorWithPales(@Param("id") String id);
 }
