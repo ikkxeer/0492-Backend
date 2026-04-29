@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: proyecto
+      MYSQL_USER: anon
+      MYSQL_PASSWORD: "12345678aA!"
+      MYSQL_ROOT_PASSWORD: "PauIkerBagner12345!"
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build: .
+    container_name: spring_backend
+    restart: always
+    ports:
+      - "8084:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/proyecto?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=anon
+      - SPRING_DATASOURCE_PASSWORD=12345678aA!
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
