@@ -4,10 +4,14 @@
  */
 package com.example.backend.web;
 
+import com.example.backend.domain.GrupMozos;
 import com.example.backend.service.GrupMozosService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +35,20 @@ public class GrupMozosController {
     @GetMapping("/total")
     public long countAll() {
         return grupMozosService.getTotalGrupMozos();
+    }
+    
+    // Mandar la id del usuario mozo y retornar su grupo
+    @GetMapping("/usuario/{idUsuari}")
+    public ResponseEntity<GrupMozos> getGrupoPorUsuario(@PathVariable Integer idUsuari) {
+        return grupMozosService.getGrupoByUsuariId(idUsuari)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
+    // Endpoint para obtener todos los grupos de mozo: GET /api/grupmozos
+    @GetMapping
+    public List<GrupMozos> getAll() {
+        return grupMozosService.getAllGrupMozos();
     }
 
 }

@@ -4,7 +4,10 @@
  */
 package com.example.backend.service;
 
+import com.example.backend.domain.GrupMozos;
 import com.example.backend.repo.GrupMozosRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +27,13 @@ public class GrupMozosService {
         return grupMozosRepository.count();
     }
     
+    // Buscar grupo por ID de usuario mozo
+    public Optional<GrupMozos> getGrupoByUsuariId(Integer idUsuari) {
+        return grupMozosRepository.findByUsuariId(idUsuari);
+    }
+    
+    // Devuelve todos los grupos de mozo
+    public List<GrupMozos> getAllGrupMozos() {
+        return grupMozosRepository.findAll();
+    }
 }

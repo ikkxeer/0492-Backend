@@ -52,7 +52,6 @@ public class Incidencia {
     private LocalDateTime dataCreacio;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     @JoinColumn(name = "incidencia_id")
     private List<EntradaHistorial> historial = new ArrayList<>();
 
