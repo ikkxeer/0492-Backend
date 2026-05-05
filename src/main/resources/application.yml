@@ -3,9 +3,12 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/proyecto}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:12345aA!}
+    # URL: Usamos 'db' (nombre del servicio en compose) y el puerto interno 3306
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://db:3306/proyecto?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC}
+    # Usuario: 'anon' definido en tu environment de MySQL
+    username: ${SPRING_DATASOURCE_USERNAME:anon}
+    # Password: '12345678aA!' definido en tu environment de MySQL
+    password: ${SPRING_DATASOURCE_PASSWORD:12345678aA!}
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   jackson:
@@ -21,7 +24,8 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        # Dialecto actualizado para evitar el aviso de "deprecated"
+        dialect: org.hibernate.dialect.MySQLDialect
         setup_osiv: false 
 
 app:
