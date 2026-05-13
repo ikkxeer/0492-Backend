@@ -6,7 +6,10 @@ package com.example.backend.service;
 
 import com.example.backend.domain.GrupPales;
 import com.example.backend.repo.GrupPalesRepository;
-import com.example.backend.repo.OrdrePaleRepository;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +26,8 @@ public class GrupPalesService {
 
     @Autowired
     private GrupPalesRepository grupPalesRepository;
-    @Autowired
-    private OrdrePaleRepository ordrePaleRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     // Retorna tots els grups de pales
     public List<GrupPales> findAll() {
@@ -43,7 +46,10 @@ public class GrupPalesService {
 
     @Transactional
     public void delete(Integer id) {
-        ordrePaleRepository.deleteByGrupPalesId(id);
+        String sql = "DELETE FROM ordre_pale WHERE id_pale IN (SELECT id_pale FROM pale WHERE id_grup_pales = :idGrup)";
+        entityManager.createNativeQuery(sql)
+                .setParameter("idGrup", id)
+                .executeUpdate();
         grupPalesRepository.deleteById(id);
     }
 }
