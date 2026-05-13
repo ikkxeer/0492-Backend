@@ -1,12 +1,11 @@
 package com.example.backend.repo;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface OrdrePaleRepository extends JpaRepository<Object, Integer> {
-    // Usamos Object o la entidad que represente 'ordre_pale'
+public interface OrdrePaleRepository extends Repository<Void, Integer> {
 
     @Modifying
     @Transactional
