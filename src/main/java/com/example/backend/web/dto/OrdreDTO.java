@@ -53,20 +53,31 @@ public class OrdreDTO {
             this.dataCreacio = o.getData_creacio().toString();
         }
 
-        this.paleIds = new ArrayList<>();
-        if (o.getPales() != null && !o.getPales().isEmpty()) {
+        if (o.getPesTotal() != null) {
+            this.pesTotal = o.getPesTotal().doubleValue();
+        } else {
             double suma = 0.0;
-            for (Pale p : o.getPales()) {
-                this.paleIds.add(p.getId_pale());
-                if (p.getPes() != null) {
-                    suma += p.getPes().doubleValue();
+            if (o.getPales() != null) {
+                for (Pale p : o.getPales()) {
+                    if (p.getPes() != null) {
+                        suma += p.getPes().doubleValue();
+                    }
                 }
             }
             this.pesTotal = suma;
-            this.quantitatPales = o.getPales().size();
+        }
+        
+        if (o.getQuantitatPales() != null) {
+            this.quantitatPales = o.getQuantitatPales();
         } else {
-            this.pesTotal = 0.0;
-            this.quantitatPales = 0;
+            this.quantitatPales = (o.getPales() != null) ? o.getPales().size() : 0;
+        }
+
+        this.paleIds = new ArrayList<>();
+        if (o.getPales() != null && !o.getPales().isEmpty()) {
+            for (Pale p : o.getPales()) {
+                this.paleIds.add(p.getId_pale());
+            }
         }
 
         if (o.getGestor() != null) {
