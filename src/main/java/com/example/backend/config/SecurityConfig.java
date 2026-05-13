@@ -39,29 +39,30 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                // Auth público
-                .requestMatchers("/api/auth/**").permitAll()
-                // Users público
-                .requestMatchers("/api/usuaris/**").permitAll()
-                // Pale público
-                .requestMatchers("/api/pales/**").permitAll()
-                // Grup mozos público
-                .requestMatchers("/api/grupmozos/**").permitAll()
-                // Grup pales público
-                .requestMatchers("/api/gruppales/**").permitAll()
-                // Ordres público
-                .requestMatchers("/api/ordres/**").permitAll()
-                // Grup mozos público
-                .requestMatchers("/api/client/**").permitAll()
-                // Incidencias público
-                .requestMatchers("/api/incidencies/**").permitAll()
-                 // Resto protegido
-                .anyRequest().authenticated()
-                )
+                        // Auth público
+                        .requestMatchers("/api/auth/**").permitAll()
+                        // Users público
+                        .requestMatchers("/api/usuaris/**").permitAll()
+                        // Pale público
+                        .requestMatchers("/api/pales/**").permitAll()
+                        // Grup mozos público
+                        .requestMatchers("/api/grupmozos/**").permitAll()
+                        // Grup pales público
+                        .requestMatchers("/api/gruppales/**").permitAll()
+                        // Ordres público
+                        .requestMatchers("/api/ordres/**").permitAll()
+                        // Grup mozos público
+                        .requestMatchers("/api/client/**").permitAll()
+                        // Incidencias público
+                        .requestMatchers("/api/incidencies/**").permitAll()
+                        // Dashboard público
+                        .requestMatchers("/api/dashboard/**").permitAll()
+                        // Resto protegido
+                        .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-    
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -69,6 +70,10 @@ public class SecurityConfig {
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
-        return new UrlBasedCorsConfigurationSource() {{ registerCorsConfiguration("/api/**", config); }};
+        return new UrlBasedCorsConfigurationSource() {
+            {
+                registerCorsConfiguration("/api/**", config);
+            }
+        };
     }
 }
