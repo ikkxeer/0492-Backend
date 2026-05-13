@@ -23,27 +23,12 @@ public class DashboardController {
 
     @GetMapping("/pales-setmana")
     public ResponseEntity<?> getPalesSetmana() {
-        return ResponseEntity.ok(List.of(
-            Map.of("dia", "Dl", "total", 280),
-            Map.of("dia", "Dm", "total", 310),
-            Map.of("dia", "Dc", "total", 290),
-            Map.of("dia", "Dj", "total", 430),
-            Map.of("dia", "Dv", "total", 400),
-            Map.of("dia", "Ds", "total", 170),
-            Map.of("dia", "Dg", "total", 150)
-        ));
+        return ResponseEntity.ok(dashboardService.getOrdresSetmana());
     }
 
     @GetMapping("/tendencia-entregues")
     public ResponseEntity<?> getTendenciaEntregues() {
-        return ResponseEntity.ok(List.of(
-            Map.of("mes", "Gen", "total", 2300),
-            Map.of("mes", "Feb", "total", 2500),
-            Map.of("mes", "Mar", "total", 2480),
-            Map.of("mes", "Abr", "total", 2600),
-            Map.of("mes", "Mai", "total", 2580),
-            Map.of("mes", "Jun", "total", 3800)
-        ));
+        return ResponseEntity.ok(dashboardService.getTendenciaEntregues());
     }
 
     @GetMapping("/activitat-recent")
