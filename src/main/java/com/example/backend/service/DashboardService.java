@@ -6,6 +6,9 @@ import com.example.backend.repo.IncidenciaRepository;
 import com.example.backend.web.dto.DashboardStatsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class DashboardService {
@@ -27,9 +30,13 @@ public class DashboardService {
         dto.setPalesActives(palesActives);
         dto.setPalesActivesPercent(0); 
         
-        // Ordres avui (fake de moment)
-        dto.setOrdresAvui(12);
-        dto.setOrdresAvuiPercent(5);
+        // Ordres avui (reals des de la BBDD)
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+        long ordresAvui = ordreRepo.countByDataCreacioBetween(startOfDay, endOfDay);
+        dto.setOrdresAvui(ordresAvui);
+        dto.setOrdresAvuiPercent(0);
         
         // Incidències
         dto.setIncidencies(incidenciaRepo.count());

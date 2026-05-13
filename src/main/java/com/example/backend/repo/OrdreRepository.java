@@ -44,4 +44,8 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
     // Buscamos por una orden con los pales incluidos (todo junto)
     @Query("SELECT o FROM Ordre o LEFT JOIN FETCH o.pales WHERE o.identificador = :id")
     Optional<Ordre> findByIdentificadorWithPales(@Param("id") String id);
+
+    // Contamos las órdenes creadas en un rango de fechas
+    @Query("SELECT COUNT(o) FROM Ordre o WHERE o.data_creacio >= :iniciDia AND o.data_creacio <= :fiDia")
+    long countByDataCreacioBetween(@Param("iniciDia") java.time.LocalDateTime iniciDia, @Param("fiDia") java.time.LocalDateTime fiDia);
 }
