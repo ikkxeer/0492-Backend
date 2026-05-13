@@ -52,4 +52,15 @@ public class IncidenciaController {
         Incidencia actualizada = service.actualizarEstado(id, nouEstat, autor);
         return ResponseEntity.ok(actualizada);
     }
+    
+    // Endpoint per a assignar un responsable: PATCH /api/incidencies/{id}/assignar
+    @PatchMapping("/{id}/assignar")
+    public ResponseEntity<Incidencia> assignarResponsable(
+            @PathVariable Integer id,
+            @RequestParam Integer responsableId,
+            @RequestParam String autor) {
+        
+        Incidencia actualizada = service.assignarResponsable(id, responsableId, autor);
+        return ResponseEntity.ok(actualizada);
+    }
 }

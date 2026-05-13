@@ -55,6 +55,12 @@ public class Incidencia {
     @JoinColumn(name = "incidencia_id")
     private List<EntradaHistorial> historial = new ArrayList<>();
 
+    @Transient
+    private String reportatPerNom;
+
+    @Transient
+    private String assignatANom;
+
     // Getters
     public Integer getId_incidencia() {
         return id_incidencia;
@@ -98,6 +104,14 @@ public class Incidencia {
 
     public List<EntradaHistorial> getHistorial() {
         return historial;
+    }
+
+    public String getReportatPerNom() {
+        return reportatPerNom;
+    }
+
+    public String getAssignatANom() {
+        return assignatANom;
     }
 
     // Setters
@@ -145,4 +159,11 @@ public class Incidencia {
         this.historial = historial;
     }
     
+    public void setReportatPerNom(String reportatPerNom) {
+        this.reportatPerNom = reportatPerNom;
+    }
+
+    public void setAssignatANom(String assignatANom) {
+        this.assignatANom = assignatANom;
+    }
 }
