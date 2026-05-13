@@ -61,6 +61,9 @@ public class UserAccount {
     @JsonIgnore
     private List<Ordre> ordresGestionades;
     
+    @Transient
+    private String contrasenyaTemporal;
+    
     // Getters
     public Integer getId() {
         return id;
@@ -114,6 +117,10 @@ public class UserAccount {
         return ultimAcces;
     }
     
+    public String getContrasenyaTemporal() {
+        return contrasenyaTemporal;
+    }
+    
     // Setters
     public void setContrasenya(String contrasenya) {
         this.contrasenya = contrasenya;
@@ -153,6 +160,10 @@ public class UserAccount {
 
     public void setUltimAcces(LocalDateTime ultimAcces) {
         this.ultimAcces = ultimAcces;
+    }
+    
+    public void setContrasenyaTemporal(String contrasenyaTemporal) {
+        this.contrasenyaTemporal = contrasenyaTemporal;
     }
     
 }

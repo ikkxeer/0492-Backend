@@ -53,8 +53,11 @@ public class UserAccountService {
         String tempPassword = "Tmp-" + java.util.UUID.randomUUID().toString().substring(0, 10);
         // Possem la contrasenya
         user.setContrasenya(new BCryptPasswordEncoder().encode(tempPassword));
+        user.setContrasenyaTemporal(tempPassword); // Guardem en clar per retornar-ho al frontend
         // Creem l'usuari i retornem la resposta
-        return userRepository.save(user);
+        UserAccount savedUser = userRepository.save(user);
+        savedUser.setContrasenyaTemporal(tempPassword); // Reassignem per evitar que es perdi
+        return savedUser;
     }
     
     // Actualizar usuari
