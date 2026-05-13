@@ -6,10 +6,12 @@ package com.example.backend.service;
 
 import com.example.backend.domain.GrupPales;
 import com.example.backend.repo.GrupPalesRepository;
+import com.example.backend.repo.OrdrePaleRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service per els gruppales
@@ -21,6 +23,8 @@ public class GrupPalesService {
 
     @Autowired
     private GrupPalesRepository grupPalesRepository;
+    @Autowired
+    private OrdrePaleRepository ordrePaleRepository;
 
     // Retorna tots els grups de pales
     public List<GrupPales> findAll() {
@@ -37,8 +41,9 @@ public class GrupPalesService {
         return grupPalesRepository.save(grup);
     }
 
-    // Elimina un grup de pale segons el seu ID
+    @Transactional
     public void delete(Integer id) {
+        ordrePaleRepository.deleteByGrupPalesId(id);
         grupPalesRepository.deleteById(id);
     }
 }
