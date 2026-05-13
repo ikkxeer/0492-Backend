@@ -197,7 +197,7 @@ public class OrdreService {
     
     // Confirmar orden
     @Transactional
-    public OrdreDTO confirmar(Integer id, String nomGrupMozos) {
+    public OrdreDTO confirmar(Integer id, String nomGrupMozos, Integer gestorId) {
         Ordre o = ordreRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
@@ -209,6 +209,10 @@ public class OrdreService {
 
         if (nomGrupMozos != null && !nomGrupMozos.isEmpty()) {
             grupMozosRepository.findByNom(nomGrupMozos).ifPresent(o::setGrupMozos);
+        }
+
+        if (gestorId != null) {
+            userRepository.findById(gestorId).ifPresent(o::setGestor);
         }
 
         String codiAlbara = "ALB-" + LocalDateTime.now().getYear() + "-" + (10000 + o.getId_ordre());
