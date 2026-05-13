@@ -46,7 +46,6 @@ public class OrdreDTO {
         this.temporada = o.getTemporada();
         this.prioritat = o.getPrioritat();
         this.preu = (o.getPreu() != null) ? o.getPreu().doubleValue() : 0.0;
-        this.paleIds = new ArrayList<>();
         
         this.transportista = o.getTransportista() != null ? o.getTransportista().getNom() : null;
         
@@ -54,35 +53,31 @@ public class OrdreDTO {
             this.dataCreacio = o.getData_creacio().toString();
         }
 
-        if (o.getGestor() != null) {
-            this.gestorResponsable = o.getGestor().getNom();
-            this.idGestor = o.getGestor().getId();
-        }
-
-        if (o.getPales() != null) {
-            // Calculamos el peso total sumando el peso de cada palé
-            double sumaPes = o.getPales().stream()
-                .filter(p -> p.getPes() != null)
-                .mapToDouble(p -> p.getPes().doubleValue())
-                .sum();
-
-            this.pesTotal = sumaPes; 
-
+        this.paleIds = new ArrayList<>();
+        if (o.getPales() != null && !o.getPales().isEmpty()) {
+            double suma = 0.0;
             for (Pale p : o.getPales()) {
-                this.paleIds.add(p.getId_pale()); 
+                this.paleIds.add(p.getId_pale());
+                if (p.getPes() != null) {
+                    suma += p.getPes().doubleValue();
+                }
             }
+            this.pesTotal = suma;
             this.quantitatPales = o.getPales().size();
         } else {
             this.pesTotal = 0.0;
             this.quantitatPales = 0;
         }
 
-        this.paleIds = new ArrayList<>();
-        if (o.getPales() != null) {
-            for (Pale p : o.getPales()) {
-                this.paleIds.add(p.getId_pale()); 
-            }
-            this.quantitatPales = o.getPales().size();
+        if (o.getGestor() != null) {
+            this.gestorResponsable = o.getGestor().getNom();
+            this.idGestor = o.getGestor().getId();
+        }
+
+        if (o.getHistorial() != null) {
+            this.historial = o.getHistorial().stream()
+                    .map(TrackingDTO::new)
+                    .toList();
         }
     }
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.backend.service;
 
 import com.example.backend.domain.Ordre;
@@ -39,13 +35,16 @@ public class OrdreService {
     private PaleRepository paleRepository;
 
     // rolId=1: ADMIN totes les ordres
+    @Transactional(readOnly = true)
     public List<OrdreDTO> findAll() {
+        // Importante: Usamos findAll() pero el DTO ahora calculará el peso si la relación está cargada.
         return ordreRepository.findAll().stream()
                 .map(OrdreDTO::new)
                 .collect(Collectors.toList());
     }
 
     // rolId=2: GESTOR ordres on ell és el gestor
+    @Transactional(readOnly = true)
     public List<OrdreDTO> findByGestor(String nom) {
         return ordreRepository.findByGestorNom(nom).stream()
                 .map(OrdreDTO::new)
@@ -53,6 +52,7 @@ public class OrdreService {
     }
 
     // rolId=3: MOZO ordres assignades al seu grup
+    @Transactional(readOnly = true)
     public List<OrdreDTO> findByMozoGrupo(String nomMozo) {
         return ordreRepository.findByGrupoMozoUsuarioNom(nomMozo).stream()
                 .map(OrdreDTO::new)
@@ -60,6 +60,7 @@ public class OrdreService {
     }
 
     // rolId=4: TRANSPORTISTA ordres assignades a ell
+    @Transactional(readOnly = true)
     public List<OrdreDTO> findByTransportista(String nom) {
         return ordreRepository.findByTransportistaNom(nom).stream()
                 .map(OrdreDTO::new)
@@ -69,6 +70,7 @@ public class OrdreService {
     @Transactional(readOnly = true)
     public Optional<OrdreDTO> findByIdentificador(String id) {
         // Usamos el método del repositorio que hace el JOIN FETCH de los pales
+        // Esto garantiza que la colección "pales" no sea null al construir el DTO
         return ordreRepository.findByIdentificadorWithPales(id)
                 .map(OrdreDTO::new);
     }
@@ -92,7 +94,7 @@ public class OrdreService {
         o.setEstat("ESBORRANY");
         o.setData_creacio(LocalDateTime.now());
         
-        // Generar Identificador (Ejemplo: ORD-2026-XXXX)
+        // Generar Identificador
         o.setIdentificador("ORD-" + System.currentTimeMillis() % 100000);
 
         // Asignar Gestor
@@ -104,6 +106,14 @@ public class OrdreService {
         if (dto.paleIds != null && !dto.paleIds.isEmpty()) {
             List<Pale> palesSeleccionados = paleRepository.findAllById(dto.paleIds);
             o.setPales(palesSeleccionados);
+            
+            // Calculamos el peso total para persistirlo en la entidad
+            BigDecimal sumaPes = palesSeleccionados.stream()
+                    .map(Pale::getPes)
+                    .filter(pes -> pes != null)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            o.setPesTotal(sumaPes);
+            o.setQuantitatPales(palesSeleccionados.size());
             
             // Cambiar estado de los pales a 'reservado'
             palesSeleccionados.forEach(p -> p.setEstat("reservat"));
@@ -131,8 +141,21 @@ public class OrdreService {
 
         // Si se pasan nuevos pales, actualizamos la lista
         if (dto.paleIds != null) {
+            // Liberar pales antiguos
             o.getPales().forEach(p -> p.setEstat("disponible"));
+            
             List<Pale> nuevosPales = paleRepository.findAllById(dto.paleIds);
+            
+            // Calcular nuevo peso total
+            BigDecimal sumaPes = nuevosPales.stream()
+                    .map(Pale::getPes)
+                    .filter(pes -> pes != null)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+            o.setPesTotal(sumaPes);
+            o.setQuantitatPales(nuevosPales.size());
+            
+            // Reservar nuevos pales
             nuevosPales.forEach(p -> p.setEstat("reservat"));
             o.setPales(nuevosPales);
         }
@@ -163,19 +186,15 @@ public class OrdreService {
         Ordre o = ordreRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
-        // Validar que esté en borrador
         if (!"ESBORRANY".equals(o.getEstat())) {
             throw new RuntimeException("Només es poden confirmar ordres en estat ESBORRANY");
         }
 
-        // Cambiar estado
         o.setEstat("PENDENT_PREPARACIO");
 
-        // Generar código de Albarán
         String codiAlbara = "ALB-" + LocalDateTime.now().getYear() + "-" + (10000 + o.getId_ordre());
         o.setCodiAlbara(codiAlbara);
 
-        // Asegurar que los pales pasen a reservado (si no se hizo en el create)
         if (o.getPales() != null) {
             o.getPales().forEach(p -> p.setEstat("reservat"));
         }
@@ -184,9 +203,6 @@ public class OrdreService {
         return new OrdreDTO(guardada);
     }
     
-    /**
-     * Canvia l'estat d'una ordre manualment
-     */
     @Transactional
     public OrdreDTO canviarEstat(Integer id, String nouEstat) {
         Ordre o = ordreRepository.findById(id)
@@ -197,18 +213,14 @@ public class OrdreService {
         return new OrdreDTO(guardada);
     }
     
-    /**
-    * Assigna un transportista a una ordre
-    */
-   @Transactional
-   public OrdreDTO assignarTransportista(Integer id, Integer transportistaId) {
-       Ordre o = ordreRepository.findById(id)
-               .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
+    @Transactional
+    public OrdreDTO assignarTransportista(Integer id, Integer transportistaId) {
+        Ordre o = ordreRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
-       userRepository.findById(transportistaId).ifPresent(o::setTransportista);
+        userRepository.findById(transportistaId).ifPresent(o::setTransportista);
 
-       Ordre guardada = ordreRepository.save(o);
-       return new OrdreDTO(guardada);
-   }
-
+        Ordre guardada = ordreRepository.save(o);
+        return new OrdreDTO(guardada);
+    }
 }
