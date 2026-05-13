@@ -37,17 +37,31 @@ public class OrdreService {
     // rolId=1: ADMIN totes les ordres
     @Transactional(readOnly = true)
     public List<OrdreDTO> findAll() {
-        // Importante: Usamos findAll() pero el DTO ahora calculará el peso si la relación está cargada.
         return ordreRepository.findAll().stream()
-                .map(OrdreDTO::new)
+                .map(this::convertToDTOWithPesRecalculated)
                 .collect(Collectors.toList());
+    }
+
+    private OrdreDTO convertToDTOWithPesRecalculated(Ordre o) {
+        OrdreDTO dto = new OrdreDTO(o);
+        if (dto.paleIds != null && !dto.paleIds.isEmpty()) {
+            List<Pale> pales = paleRepository.findAllById(dto.paleIds);
+            double suma = pales.stream()
+                .filter(p -> p.getPes() != null)
+                .mapToDouble(p -> p.getPes().doubleValue())
+                .sum();
+            dto.pesTotal = suma;
+        } else if (dto.pesTotal == null) {
+            dto.pesTotal = 0.0;
+        }
+        return dto;
     }
 
     // rolId=2: GESTOR ordres on ell és el gestor
     @Transactional(readOnly = true)
     public List<OrdreDTO> findByGestor(String nom) {
         return ordreRepository.findByGestorNom(nom).stream()
-                .map(OrdreDTO::new)
+                .map(this::convertToDTOWithPesRecalculated)
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +69,7 @@ public class OrdreService {
     @Transactional(readOnly = true)
     public List<OrdreDTO> findByMozoGrupo(String nomMozo) {
         return ordreRepository.findByGrupoMozoUsuarioNom(nomMozo).stream()
-                .map(OrdreDTO::new)
+                .map(this::convertToDTOWithPesRecalculated)
                 .collect(Collectors.toList());
     }
 
@@ -63,16 +77,14 @@ public class OrdreService {
     @Transactional(readOnly = true)
     public List<OrdreDTO> findByTransportista(String nom) {
         return ordreRepository.findByTransportistaNom(nom).stream()
-                .map(OrdreDTO::new)
+                .map(this::convertToDTOWithPesRecalculated)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public Optional<OrdreDTO> findByIdentificador(String id) {
-        // Usamos el método del repositorio que hace el JOIN FETCH de los pales
-        // Esto garantiza que la colección "pales" no sea null al construir el DTO
         return ordreRepository.findByIdentificadorWithPales(id)
-                .map(OrdreDTO::new);
+                .map(this::convertToDTOWithPesRecalculated);
     }
     
     // Crear orden

@@ -53,31 +53,23 @@ public class OrdreDTO {
             this.dataCreacio = o.getData_creacio().toString();
         }
 
-        if (o.getPesTotal() != null) {
-            this.pesTotal = o.getPesTotal().doubleValue();
-        } else {
-            double suma = 0.0;
-            if (o.getPales() != null) {
-                for (Pale p : o.getPales()) {
-                    if (p.getPes() != null) {
-                        suma += p.getPes().doubleValue();
-                    }
-                }
-            }
-            this.pesTotal = suma;
-        }
-        
-        if (o.getQuantitatPales() != null) {
-            this.quantitatPales = o.getQuantitatPales();
-        } else {
-            this.quantitatPales = (o.getPales() != null) ? o.getPales().size() : 0;
-        }
-
         this.paleIds = new ArrayList<>();
+        double sumaPes = 0.0;
+        int countPales = 0;
+        
         if (o.getPales() != null && !o.getPales().isEmpty()) {
             for (Pale p : o.getPales()) {
                 this.paleIds.add(p.getId_pale());
+                if (p.getPes() != null) {
+                    sumaPes += p.getPes().doubleValue();
+                }
             }
+            this.pesTotal = sumaPes;
+            this.quantitatPales = o.getPales().size();
+        } else {
+            // Fallback al valor de la BD si no hi ha pales carregats en memòria
+            this.pesTotal = (o.getPesTotal() != null) ? o.getPesTotal().doubleValue() : 0.0;
+            this.quantitatPales = (o.getQuantitatPales() != null) ? o.getQuantitatPales() : 0;
         }
 
         if (o.getGestor() != null) {
