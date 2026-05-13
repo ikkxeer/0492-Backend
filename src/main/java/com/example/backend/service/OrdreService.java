@@ -251,7 +251,7 @@ public class OrdreService {
         t.setOrdre(o);
         t.setEtapa(nouEstat);
         t.setTimestamp(LocalDateTime.now());
-        t.setNotes("Canvi d'estat a " + nouEstat);
+        t.setNotes(formatEstat(nouEstat));
         if (userId != null) {
             userRepository.findById(userId).ifPresent(t::setUsuari);
         }
@@ -273,5 +273,17 @@ public class OrdreService {
 
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
+    }
+    
+    private String formatEstat(String estat) {
+        if (estat == null) return "";
+        switch (estat) {
+            case "PENDENT_PREPARACIO": return "Pendent preparació";
+            case "PREPARACIO_EN_CURS": return "Preparació en curs";
+            case "PREPARACIO_FINALITZADA": return "Preparació finalitzada";
+            case "EN_TRANSIT": return "En trànsit";
+            case "ENTREGAT": return "Entregat";
+            default: return estat;
+        }
     }
 }
