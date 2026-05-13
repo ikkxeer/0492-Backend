@@ -46,6 +46,7 @@ public class OrdreDTO {
         this.temporada = o.getTemporada();
         this.prioritat = o.getPrioritat();
         this.preu = (o.getPreu() != null) ? o.getPreu().doubleValue() : 0.0;
+        this.paleIds = new ArrayList<>();
         
         this.transportista = o.getTransportista() != null ? o.getTransportista().getNom() : null;
         
@@ -58,8 +59,22 @@ public class OrdreDTO {
             this.idGestor = o.getGestor().getId();
         }
 
-        if (o.getPesTotal() != null) {
-            this.pesTotal = o.getPesTotal().doubleValue();
+        if (o.getPales() != null) {
+            // Calculamos el peso total sumando el peso de cada palé
+            double sumaPes = o.getPales().stream()
+                .filter(p -> p.getPes() != null)
+                .mapToDouble(p -> p.getPes().doubleValue())
+                .sum();
+
+            this.pesTotal = sumaPes; 
+
+            for (Pale p : o.getPales()) {
+                this.paleIds.add(p.getId_pale()); 
+            }
+            this.quantitatPales = o.getPales().size();
+        } else {
+            this.pesTotal = 0.0;
+            this.quantitatPales = 0;
         }
 
         this.paleIds = new ArrayList<>();

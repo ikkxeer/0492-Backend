@@ -66,12 +66,10 @@ public class OrdreService {
                 .collect(Collectors.toList());
     }
 
-    // Buscar per identificador (detall)
     @Transactional(readOnly = true)
     public Optional<OrdreDTO> findByIdentificador(String id) {
-        return ordreRepository.findAll().stream()
-                .filter(o -> o.getIdentificador().equals(id))
-                .findFirst()
+        // Usamos el método del repositorio que hace el JOIN FETCH de los pales
+        return ordreRepository.findByIdentificadorWithPales(id)
                 .map(OrdreDTO::new);
     }
     
