@@ -110,4 +110,26 @@ public class UserAccountController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    /**
+     * POST per restablir la contrasenya d'un usuari
+     * 
+     * @param id Id usuari
+     * @param body Body amb la nova contrasenya
+     * @return 200 OK si s'ha actualitzat, 404 si no existeix
+     */
+    @PostMapping("/{id}/reset-password")
+    public ResponseEntity<?> resetPassword(@PathVariable Integer id, @RequestBody java.util.Map<String, String> body) {
+        String contrasenya = body.get("contrasenya");
+        if (contrasenya == null || contrasenya.isEmpty()) {
+            return ResponseEntity.badRequest().body("Contrasenya is required");
+        }
+        
+        boolean success = userService.resetPassword(id, contrasenya);
+        if (success) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

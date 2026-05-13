@@ -78,4 +78,13 @@ public class UserAccountService {
 
         }).orElse(null); // Si no troba l'id retorna null
     }
+
+    // Restablir contrasenya
+    public boolean resetPassword(Integer id, String novaContrasenya) {
+        return userRepository.findById(id).map(user -> {
+            user.setContrasenya(new BCryptPasswordEncoder().encode(novaContrasenya));
+            userRepository.save(user);
+            return true;
+        }).orElse(false);
+    }
 }
