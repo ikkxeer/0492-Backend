@@ -17,10 +17,10 @@ import org.springframework.http.HttpStatus;
  * Controlador per ordres
  *
  * /api/ordres: Retorna les ordres filtrades per rol:
- *   rolId=1 (ADMIN): totes les ordres
- *   rolId=2 (GESTOR): ordres on ell és el gestor (?nom=)
- *   rolId=3 (MOZO): ordres del seu grup de mozos (?nom=)
- *   rolId=4 (TRANSPORTISTA): ordres assignades a ell (?nom=)
+ * rolId=1 (ADMIN): totes les ordres
+ * rolId=2 (GESTOR): ordres on ell és el gestor (?nom=)
+ * rolId=3 (MOZO): ordres del seu grup de mozos (?nom=)
+ * rolId=4 (TRANSPORTISTA): ordres assignades a ell (?nom=)
  *
  * - POST: Crea una nova ordre
  * - PUT: Actualitza una ordre
@@ -39,9 +39,8 @@ public class OrdreController {
     // Endpoint per obtenir les ordres filtrades per rol: GET /api/ordres
     @GetMapping
     public ResponseEntity<List<OrdreDTO>> getOrdres(
-        @RequestParam(required = false) String nom,
-        @RequestParam(required = false) Integer rolId
-    ) {
+            @RequestParam(required = false) String nom,
+            @RequestParam(required = false) Integer rolId) {
         List<OrdreDTO> ordres;
 
         if (rolId != null && rolId == 1) {
@@ -51,20 +50,20 @@ public class OrdreController {
         } else if (rolId != null && rolId == 2) {
             // GESTOR: veu les ordres on ell és el gestor responsable
             ordres = (nom != null && !nom.isEmpty())
-                ? ordreService.findByGestor(nom)
-                : List.of();
+                    ? ordreService.findByGestor(nom)
+                    : List.of();
 
         } else if (rolId != null && rolId == 3) {
             // MOZO: veu les ordres assignades al seu grup de mozos
             ordres = (nom != null && !nom.isEmpty())
-                ? ordreService.findByMozoGrupo(nom)
-                : List.of();
+                    ? ordreService.findByMozoGrupo(nom)
+                    : List.of();
 
         } else if (rolId != null && rolId == 4) {
             // TRANSPORTISTA: veu les ordres assignades directament a ell
             ordres = (nom != null && !nom.isEmpty())
-                ? ordreService.findByTransportista(nom)
-                : List.of();
+                    ? ordreService.findByTransportista(nom)
+                    : List.of();
 
         } else {
             ordres = List.of();
@@ -80,14 +79,14 @@ public class OrdreController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
     // Endpoint per crear una nova ordre: POST /api/ordres
     @PostMapping
     public ResponseEntity<OrdreDTO> crear(@RequestBody OrdreCreateDTO dto) {
         OrdreDTO nueva = ordreService.crear(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
     }
-    
+
     // Endpoint per actualizar una ordre: PUT /api/ordres/{id}
     @PutMapping("/{id}")
     public ResponseEntity<OrdreDTO> actualizar(@PathVariable Integer id, @RequestBody OrdreCreateDTO dto) {
@@ -98,10 +97,10 @@ public class OrdreController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @PutMapping("/{id}/confirmar")
     public ResponseEntity<OrdreDTO> confirmar(
-            @PathVariable Integer id, 
+            @PathVariable Integer id,
             @RequestParam(required = false) String grupMozos,
             @RequestParam(required = false) Integer gestorId) {
         try {
@@ -115,27 +114,25 @@ public class OrdreController {
     public ResponseEntity<OrdreDTO> canviarEstat(
             @PathVariable Integer id,
             @RequestParam String nouEstat,
-            @RequestParam(required = false) Integer userId
-    ) {
+            @RequestParam(required = false) Integer userId) {
         try {
             return ResponseEntity.ok(ordreService.canviarEstat(id, nouEstat, userId));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @PutMapping("/{id}/transportista")
     public ResponseEntity<OrdreDTO> assignarTransportista(
             @PathVariable Integer id,
-            @RequestParam Integer transportistaId
-    ) {
+            @RequestParam Integer transportistaId) {
         try {
             return ResponseEntity.ok(ordreService.assignarTransportista(id, transportistaId));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     // Endpoint per eliminar una ordre: DELETE /api/ordres/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {

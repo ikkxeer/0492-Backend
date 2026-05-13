@@ -11,7 +11,7 @@ import com.example.backend.repo.PaleRepository;
 import com.example.backend.repo.UserRepository;
 import com.example.backend.web.dto.OrdreCreateDTO;
 import com.example.backend.web.dto.OrdreDTO;
-import org.springframework.transaction.annotation.Transactional; 
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,13 +28,13 @@ public class OrdreService {
 
     @Autowired
     private OrdreRepository ordreRepository;
-    
+
     @Autowired
     private UserRepository userRepository;
-    
-    @Autowired 
+
+    @Autowired
     private PaleRepository paleRepository;
-    
+
     @Autowired
     private com.example.backend.repo.GrupMozosRepository grupMozosRepository;
 
@@ -51,9 +51,9 @@ public class OrdreService {
         if (dto.paleIds != null && !dto.paleIds.isEmpty()) {
             List<Pale> pales = paleRepository.findAllById(dto.paleIds);
             double suma = pales.stream()
-                .filter(p -> p.getPes() != null)
-                .mapToDouble(p -> p.getPes().doubleValue())
-                .sum();
+                    .filter(p -> p.getPes() != null)
+                    .mapToDouble(p -> p.getPes().doubleValue())
+                    .sum();
             dto.pesTotal = suma;
         } else if (dto.pesTotal == null) {
             dto.pesTotal = 0.0;
@@ -90,12 +90,12 @@ public class OrdreService {
         return ordreRepository.findByIdentificadorWithPales(id)
                 .map(this::convertToDTOWithPesRecalculated);
     }
-    
+
     // Crear orden
     @Transactional
     public OrdreDTO crear(OrdreCreateDTO dto) {
         Ordre o = new Ordre();
-        
+
         // Datos básicos
         o.setAdreca(dto.adreca);
         o.setCiutat(dto.ciutat);
@@ -105,11 +105,11 @@ public class OrdreService {
         o.setTemporada(dto.temporada);
         o.setPreu(BigDecimal.valueOf(dto.preu != null ? dto.preu : 0.0));
         o.setTendaDestinataria(dto.tendaDestinataria);
-        
+
         // Estado inicial
         o.setEstat("ESBORRANY");
         o.setData_creacio(LocalDateTime.now());
-        
+
         // Generar Identificador
         o.setIdentificador("ORD-" + System.currentTimeMillis() % 100000);
 
@@ -122,7 +122,7 @@ public class OrdreService {
         if (dto.paleIds != null && !dto.paleIds.isEmpty()) {
             List<Pale> palesSeleccionados = paleRepository.findAllById(dto.paleIds);
             o.setPales(palesSeleccionados);
-            
+
             // Calculamos el peso total para persistirlo en la entidad
             BigDecimal sumaPes = palesSeleccionados.stream()
                     .map(Pale::getPes)
@@ -130,7 +130,7 @@ public class OrdreService {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(palesSeleccionados.size());
-            
+
             // Cambiar estado de los pales a 'reservado'
             palesSeleccionados.forEach(p -> p.setEstat("reservat"));
         }
@@ -138,7 +138,7 @@ public class OrdreService {
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
-    
+
     // Actualizar una orden existente
     @Transactional
     public OrdreDTO actualizar(Integer id, OrdreCreateDTO dto) {
@@ -159,18 +159,18 @@ public class OrdreService {
         if (dto.paleIds != null) {
             // Liberar pales antiguos
             o.getPales().forEach(p -> p.setEstat("disponible"));
-            
+
             List<Pale> nuevosPales = paleRepository.findAllById(dto.paleIds);
-            
+
             // Calcular nuevo peso total
             BigDecimal sumaPes = nuevosPales.stream()
                     .map(Pale::getPes)
                     .filter(pes -> pes != null)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            
+
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(nuevosPales.size());
-            
+
             // Reservar nuevos pales
             nuevosPales.forEach(p -> p.setEstat("reservat"));
             o.setPales(nuevosPales);
@@ -179,7 +179,7 @@ public class OrdreService {
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
-    
+
     // Eliminar una ordre per ID
     @Transactional
     public void eliminar(Integer id) {
@@ -189,13 +189,13 @@ public class OrdreService {
             if (o.getPales() != null) {
                 o.getPales().forEach(p -> p.setEstat("disponible"));
             }
-            
+
             ordreRepository.delete(o);
         } else {
             throw new RuntimeException("L'ordre no existeix");
         }
     }
-    
+
     // Confirmar orden
     @Transactional
     public OrdreDTO confirmar(Integer id, String nomGrupMozos, Integer gestorId) {
@@ -239,7 +239,7 @@ public class OrdreService {
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
-    
+
     @Transactional
     public OrdreDTO canviarEstat(Integer id, String nouEstat, Integer userId) {
         Ordre o = ordreRepository.findById(id)
@@ -263,7 +263,7 @@ public class OrdreService {
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
-    
+
     @Transactional
     public OrdreDTO assignarTransportista(Integer id, Integer transportistaId) {
         Ordre o = ordreRepository.findById(id)
@@ -274,16 +274,23 @@ public class OrdreService {
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
-    
+
     private String formatEstat(String estat) {
-        if (estat == null) return "";
+        if (estat == null)
+            return "";
         switch (estat) {
-            case "PENDENT_PREPARACIO": return "Pendent preparació";
-            case "PREPARACIO_EN_CURS": return "Preparació en curs";
-            case "PREPARACIO_FINALITZADA": return "Preparació finalitzada";
-            case "EN_TRANSIT": return "En trànsit";
-            case "ENTREGAT": return "Entregat";
-            default: return estat;
+            case "PENDENT_PREPARACIO":
+                return "Pendent preparació";
+            case "PREPARACIO_EN_CURS":
+                return "Preparació en curs";
+            case "PREPARACIO_FINALITZADA":
+                return "Preparació finalitzada";
+            case "EN_TRANSIT":
+                return "En trànsit";
+            case "ENTREGAT":
+                return "Entregat";
+            default:
+                return estat;
         }
     }
 }

@@ -22,7 +22,7 @@ public class OrdreDTO {
     public Double pesTotal;
     public Integer quantitatPales;
     public List<TrackingDTO> historial;
-    public List<Integer> paleIds; 
+    public List<Integer> paleIds;
     public String telefon;
     public String temporada;
     public String prioritat;
@@ -32,7 +32,8 @@ public class OrdreDTO {
     public String transportista;
     public String grupMozos;
 
-    public OrdreDTO() {}
+    public OrdreDTO() {
+    }
 
     public OrdreDTO(Ordre o) {
         this.id_ordre = o.getId_ordre();
@@ -47,10 +48,10 @@ public class OrdreDTO {
         this.temporada = o.getTemporada();
         this.prioritat = o.getPrioritat();
         this.preu = (o.getPreu() != null) ? o.getPreu().doubleValue() : 0.0;
-        
+
         this.transportista = o.getTransportista() != null ? o.getTransportista().getNom() : null;
         this.grupMozos = o.getGrupMozos() != null ? o.getGrupMozos().getNom() : null;
-        
+
         if (o.getData_creacio() != null) {
             this.dataCreacio = o.getData_creacio().toString();
         }
@@ -58,7 +59,7 @@ public class OrdreDTO {
         this.paleIds = new ArrayList<>();
         double sumaPes = 0.0;
         int countPales = 0;
-        
+
         if (o.getPales() != null && !o.getPales().isEmpty()) {
             for (Pale p : o.getPales()) {
                 this.paleIds.add(p.getId_pale());
