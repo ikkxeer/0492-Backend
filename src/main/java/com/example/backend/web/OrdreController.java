@@ -114,10 +114,11 @@ public class OrdreController {
     @PutMapping("/{id}/estat")
     public ResponseEntity<OrdreDTO> canviarEstat(
             @PathVariable Integer id,
-            @RequestParam String nouEstat
+            @RequestParam String nouEstat,
+            @RequestParam(required = false) Integer userId
     ) {
         try {
-            return ResponseEntity.ok(ordreService.canviarEstat(id, nouEstat));
+            return ResponseEntity.ok(ordreService.canviarEstat(id, nouEstat, userId));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }

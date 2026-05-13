@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.domain.Ordre;
 import com.example.backend.domain.Pale;
 import com.example.backend.domain.UserAccount;
+import com.example.backend.domain.Tracking;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.backend.repo.OrdreRepository;
@@ -222,16 +223,43 @@ public class OrdreService {
             o.getPales().forEach(p -> p.setEstat("reservat"));
         }
 
+        Tracking t = new Tracking();
+        t.setOrdre(o);
+        t.setEtapa("PENDENT_PREPARACIO");
+        t.setTimestamp(LocalDateTime.now());
+        t.setNotes("Ordre confirmada");
+        if (gestorId != null) {
+            userRepository.findById(gestorId).ifPresent(t::setUsuari);
+        }
+        if (o.getHistorial() == null) {
+            o.setHistorial(new java.util.ArrayList<>());
+        }
+        o.getHistorial().add(t);
+
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
     
     @Transactional
-    public OrdreDTO canviarEstat(Integer id, String nouEstat) {
+    public OrdreDTO canviarEstat(Integer id, String nouEstat, Integer userId) {
         Ordre o = ordreRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
         o.setEstat(nouEstat);
+
+        Tracking t = new Tracking();
+        t.setOrdre(o);
+        t.setEtapa(nouEstat);
+        t.setTimestamp(LocalDateTime.now());
+        t.setNotes("Canvi d'estat a " + nouEstat);
+        if (userId != null) {
+            userRepository.findById(userId).ifPresent(t::setUsuari);
+        }
+        if (o.getHistorial() == null) {
+            o.setHistorial(new java.util.ArrayList<>());
+        }
+        o.getHistorial().add(t);
+
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
     }
