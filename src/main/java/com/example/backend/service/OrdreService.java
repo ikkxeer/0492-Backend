@@ -33,6 +33,9 @@ public class OrdreService {
     
     @Autowired 
     private PaleRepository paleRepository;
+    
+    @Autowired
+    private com.example.backend.repo.GrupMozosRepository grupMozosRepository;
 
     // rolId=1: ADMIN totes les ordres
     @Transactional(readOnly = true)
@@ -194,7 +197,7 @@ public class OrdreService {
     
     // Confirmar orden
     @Transactional
-    public OrdreDTO confirmar(Integer id) {
+    public OrdreDTO confirmar(Integer id, String nomGrupMozos) {
         Ordre o = ordreRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
@@ -203,6 +206,10 @@ public class OrdreService {
         }
 
         o.setEstat("PENDENT_PREPARACIO");
+
+        if (nomGrupMozos != null && !nomGrupMozos.isEmpty()) {
+            grupMozosRepository.findByNom(nomGrupMozos).ifPresent(o::setGrupMozos);
+        }
 
         String codiAlbara = "ALB-" + LocalDateTime.now().getYear() + "-" + (10000 + o.getId_ordre());
         o.setCodiAlbara(codiAlbara);

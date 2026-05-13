@@ -100,9 +100,9 @@ public class OrdreController {
     }
     
     @PutMapping("/{id}/confirmar")
-    public ResponseEntity<OrdreDTO> confirmar(@PathVariable Integer id) {
+    public ResponseEntity<OrdreDTO> confirmar(@PathVariable Integer id, @RequestParam(required = false) String grupMozos) {
         try {
-            return ResponseEntity.ok(ordreService.confirmar(id));
+            return ResponseEntity.ok(ordreService.confirmar(id, grupMozos));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }

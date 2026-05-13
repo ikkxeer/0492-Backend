@@ -30,6 +30,7 @@ public class OrdreDTO {
     public String tendaDestinataria;
     public String codiAlbara;
     public String transportista;
+    public String grupMozos;
 
     public OrdreDTO() {}
 
@@ -48,6 +49,7 @@ public class OrdreDTO {
         this.preu = (o.getPreu() != null) ? o.getPreu().doubleValue() : 0.0;
         
         this.transportista = o.getTransportista() != null ? o.getTransportista().getNom() : null;
+        this.grupMozos = o.getGrupMozos() != null ? o.getGrupMozos().getNom() : null;
         
         if (o.getData_creacio() != null) {
             this.dataCreacio = o.getData_creacio().toString();

@@ -22,5 +22,7 @@ public interface GrupMozosRepository extends JpaRepository<GrupMozos, Integer> {
                    "JOIN grupmozos_usuaris gu ON g.id_grup = gu.id_grup " +
                    "WHERE gu.id_usuari = :idUsuari", nativeQuery = true)
     Optional<GrupMozos> findByUsuariId(@Param("idUsuari") Integer idUsuari);
+
+    Optional<GrupMozos> findByNom(String nom);
 }
 
