@@ -23,4 +23,7 @@ public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer>
     // Troba una incidencia assignada a un usuari en especific
     @Query("SELECT i FROM Incidencia i WHERE i.assignatA = :userId")
     List<Incidencia> findByAssignatA(@Param("userId") Integer userId);
+
+    @Query("SELECT i.estat, COUNT(i) FROM Incidencia i GROUP BY i.estat")
+    List<Object[]> countByEstat();
 }

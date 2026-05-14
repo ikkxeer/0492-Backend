@@ -95,4 +95,18 @@ public class DashboardService {
         }
         return result;
     }
+
+    public List<Map<String, Object>> getIncidenciesPerEstat() {
+        List<Object[]> data = incidenciaRepo.countByEstat();
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Object[] row : data) {
+            String estat = row[0] != null ? row[0].toString() : "Sense estat";
+            // Mapegem noms interns a noms legibles (opcional, ho podem fer al front)
+            result.add(Map.of(
+                "name", estat,
+                "value", row[1]
+            ));
+        }
+        return result;
+    }
 }

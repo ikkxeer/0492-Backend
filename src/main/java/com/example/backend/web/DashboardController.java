@@ -34,13 +34,16 @@ public class DashboardController {
     @GetMapping("/activitat-recent")
     public ResponseEntity<?> getActivitatRecent() {
         return ResponseEntity.ok(List.of(
-            Map.of("id", 1, "descripcio", "Pala #PAL-1234 entregada", "temps", "Fa 5 minuts", "tipus", "entrega"),
-            Map.of("id", 2, "descripcio", "Nova ordre creada #ORD-5678", "temps", "Fa 12 minuts", "tipus", "ordre"),
-            Map.of("id", 3, "descripcio", "Incidència reportada #INC-9012", "temps", "Fa 23 minuts", "tipus", "incidencia")
-        ));
+                Map.of("id", 1, "descripcio", "Pala #PAL-1234 entregada", "temps", "Fa 5 minuts", "tipus", "entrega"),
+                Map.of("id", 2, "descripcio", "Nova ordre creada #ORD-5678", "temps", "Fa 12 minuts", "tipus", "ordre"),
+                Map.of("id", 3, "descripcio", "Incidència reportada #INC-9012", "temps", "Fa 23 minuts", "tipus",
+                        "incidencia")));
     }
 
-    // --- RUTES GESTOR ---
+    @GetMapping("/incidencies-estat")
+    public ResponseEntity<?> getIncidenciesEstat() {
+        return ResponseEntity.ok(dashboardService.getIncidenciesPerEstat());
+    }
 
     @GetMapping("/gestor/stats")
     public ResponseEntity<?> getGestorStats() {
@@ -61,5 +64,10 @@ public class DashboardController {
     @GetMapping("/gestor/activitat-recent")
     public ResponseEntity<?> getGestorActivitatRecent() {
         return getActivitatRecent();
+    }
+
+    @GetMapping("/gestor/incidencies-estat")
+    public ResponseEntity<?> getGestorIncidenciesEstat() {
+        return getIncidenciesEstat();
     }
 }
