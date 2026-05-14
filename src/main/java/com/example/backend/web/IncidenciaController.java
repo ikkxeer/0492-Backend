@@ -9,6 +9,7 @@ import com.example.backend.service.IncidenciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -62,5 +63,18 @@ public class IncidenciaController {
         
         Incidencia actualizada = service.assignarResponsable(id, responsableId, autor);
         return ResponseEntity.ok(actualizada);
+    }
+
+    // Endpoint per eliminar una incidència tancada: DELETE /api/incidencies/{id}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        try {
+            service.eliminar(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
