@@ -123,19 +123,12 @@ public class PaleController {
     
     // Endpoint per eliminar un pale: DELETE /api/pales/{id} 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Integer id) {
-        return paleRepository.findById(id).map(pale -> {
-            GrupPales grup = pale.getGrupPales();
-            if (grup != null) {
-                // Elimina la pale de la llista del grup i deixa que CascadeType.ALL faci la feina
-                grup.getPales().removeIf(p -> p.getId_pale().equals(id));
-                grupPalesRepository.save(grup);
-            } else {
-                // Pale sense grup, ho elimina directament
-                paleRepository.deleteById(id);
-            }
-            return ResponseEntity.<Void>ok().build();
-        }).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        if (!paleRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        paleService.deletePale(id);
+        return ResponseEntity.ok().build();
     }
     
 }

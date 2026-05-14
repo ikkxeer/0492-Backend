@@ -3,12 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.backend.web;
+
 import com.example.backend.domain.GrupPales;
 import com.example.backend.repo.ClientRepository;
 import com.example.backend.repo.GrupPalesRepository;
 import com.example.backend.repo.PaleRepository;
 import com.example.backend.service.GrupPalesService;
 import com.example.backend.web.dto.GrupPalesDTO;
+
+import jakarta.transaction.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +27,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /**
  * Controlador per gruppales
  * 
  * /api/gruppales: retorna tots els grup de pales
- *  - /total: retorna el total de gruppales
- *  - /{id}: retorna un grup de pale segons l'id
- *  - POST: crea un grup de pale passat per parametre
- *  - PUT /{id}: actualitza un grup de pale passat per parametre
- *  - DELETE /{id}: elimina un grup de pale segons l'id
+ * - /total: retorna el total de gruppales
+ * - /{id}: retorna un grup de pale segons l'id
+ * - POST: crea un grup de pale passat per parametre
+ * - PUT /{id}: actualitza un grup de pale passat per parametre
+ * - DELETE /{id}: elimina un grup de pale segons l'id
  *
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
@@ -44,63 +47,74 @@ public class GrupPalesController {
     // Atributs de la classe
     @Autowired
     private GrupPalesService grupPalesService;
-    
+
     @Autowired
     private GrupPalesRepository grupPalesRepository;
 
     @Autowired
     private PaleRepository paleRepository;
-    
+
     @Autowired
     private ClientRepository clientRepository;
 
+    // Helper per convertir entitat a DTO amb pales incloses
+    private GrupPalesDTO convertToDTO(GrupPales g) {
+        GrupPalesDTO dto = new GrupPalesDTO();
+        dto.id = String.valueOf(g.getId_grup_pales());
+        dto.referencia = g.getReferencia();
+        dto.temporada = g.getTemporada();
+        dto.proveidor = g.getProveidor() != null ? String.valueOf(g.getProveidor().getId_client()) : "";
+        dto.dataEntrada = g.getDataEntrada() != null ? g.getDataEntrada().toLocalDate().toString() : "";
+        dto.estat = g.getEstat();
+
+        if (g.getPales() != null) {
+            dto.pales = g.getPales().stream().map(p -> {
+                GrupPalesDTO.PaleDTO pale = new GrupPalesDTO.PaleDTO();
+                pale.id = String.valueOf(p.getId_pale());
+                pale.lot = p.getLot();
+                pale.sscc = p.getSscc();
+                pale.pes = p.getPes() != null ? p.getPes().doubleValue() : null;
+                pale.mesures = p.getMesures();
+                pale.paquets = p.getPaquets();
+                pale.temporada = g.getTemporada();
+                pale.dataExpedicio = p.getData_expedicio() != null
+                        ? p.getData_expedicio().toLocalDate().toString()
+                        : "";
+                pale.clientProveidor = g.getProveidor() != null
+                        ? g.getProveidor().getNom()
+                        : "";
+                pale.estat = p.getEstat();
+                return pale;
+            }).collect(java.util.stream.Collectors.toList());
+        } else {
+            dto.pales = new java.util.ArrayList<>();
+        }
+        return dto;
+    }
 
     // Endpoint per obtenir les tots els grups de pales: GET /api/gruppales
     @GetMapping
     public List<GrupPalesDTO> getAll() {
-        return grupPalesRepository.findAll().stream().map(g -> {
-            GrupPalesDTO dto = new GrupPalesDTO();
-            dto.id = String.valueOf(g.getId_grup_pales());
-            dto.referencia = g.getReferencia();
-            dto.temporada = g.getTemporada();
-            dto.proveidor = g.getProveidor() != null ? String.valueOf(g.getProveidor().getId_client()) : "";
-            dto.dataEntrada = g.getDataEntrada() != null ? g.getDataEntrada().toLocalDate().toString() : "";
-            dto.estat = g.getEstat();
-
-            // Obtener las pales de este grupo
-            dto.pales = paleRepository.findByIdGrupPales(g.getId_grup_pales())
-                .stream().map(p -> {
-                    GrupPalesDTO.PaleDTO pale = new GrupPalesDTO.PaleDTO();
-                    pale.id = String.valueOf(p.getId_pale());
-                    pale.lot = p.getLot();
-                    pale.sscc = p.getSscc();
-                    pale.pes = p.getPes() != null ? p.getPes().doubleValue() : null;
-                    pale.mesures = p.getMesures();
-                    pale.paquets = p.getPaquets();
-                    pale.temporada = g.getTemporada();
-                    pale.dataExpedicio = p.getData_expedicio() != null
-                        ? p.getData_expedicio().toLocalDate().toString() : "";
-                    pale.clientProveidor = g.getProveidor() != null 
-                        ? g.getProveidor().getNom() : "";
-                    pale.estat = p.getEstat();
-                    return pale;
-                }).collect(java.util.stream.Collectors.toList());
-
-            return dto;
-        }).collect(java.util.stream.Collectors.toList());
+        return grupPalesRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(java.util.stream.Collectors.toList());
     }
 
     // Endpoint per obtenir un grup de pales segons id: GET /api/gruppales/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<GrupPales> getById(@PathVariable Integer id) {
+    public ResponseEntity<GrupPalesDTO> getById(@PathVariable Integer id) {
         return grupPalesService.findById(id)
-                .map(ResponseEntity::ok)
+                .map(g -> ResponseEntity.ok(convertToDTO(g)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Autowired
+    private jakarta.persistence.EntityManager entityManager;
+
     // Endpoint per crear un nou grup de pales: POST /api/gruppales
     @PostMapping
-    public GrupPales create(@RequestBody GrupPalesDTO dto) {
+    @Transactional
+    public GrupPalesDTO create(@RequestBody GrupPalesDTO dto) {
         GrupPales grup = new GrupPales();
         grup.setReferencia(dto.referencia);
         grup.setTemporada(dto.temporada);
@@ -113,15 +127,40 @@ public class GrupPalesController {
         }
         if (dto.proveidor != null && !dto.proveidor.isEmpty()) {
             clientRepository.findById(Integer.valueOf(dto.proveidor))
-                .ifPresent(grup::setProveidor);
+                    .ifPresent(grup::setProveidor);
         }
-        return grupPalesService.save(grup);
+
+        // Primer guardem el grup per tenir ID
+        GrupPales guardat = grupPalesRepository.save(grup);
+
+        // Gestionar les pales inicials si n'hi ha
+        if (dto.pales != null && !dto.pales.isEmpty()) {
+            for (GrupPalesDTO.PaleDTO paleDTO : dto.pales) {
+                com.example.backend.domain.Pale p = new com.example.backend.domain.Pale();
+                p.setLot(paleDTO.lot);
+                p.setSscc(paleDTO.sscc);
+                p.setPaquets(paleDTO.paquets);
+                p.setMesures(paleDTO.mesures);
+                p.setEstat(paleDTO.estat != null ? paleDTO.estat : "disponible");
+                p.setPes(paleDTO.pes != null ? java.math.BigDecimal.valueOf(paleDTO.pes) : null);
+                if (paleDTO.dataExpedicio != null && !paleDTO.dataExpedicio.isEmpty()) {
+                    p.setData_expedicio(LocalDateTime.parse(paleDTO.dataExpedicio + "T00:00:00"));
+                }
+                p.setGrupPales(guardat);
+                com.example.backend.domain.Pale paleGuardat = paleRepository.save(p);
+                guardat.getPales().add(paleGuardat); // Manté la llista en sincronia
+            }
+        }
+
+        entityManager.flush(); // Força sincronització amb la BD
+        return convertToDTO(guardat);
     }
 
     // Endpoint per a actualitzar un grup de pales: PUT /api/gruppales/{id}
     @PutMapping("/{id}")
-    public ResponseEntity<GrupPales> update(@PathVariable Integer id, @RequestBody GrupPalesDTO dto) {
-        return grupPalesService.findById(id).map(grup -> {
+    @Transactional
+    public ResponseEntity<GrupPalesDTO> update(@PathVariable Integer id, @RequestBody GrupPalesDTO dto) {
+        return grupPalesRepository.findById(id).map(grup -> {
             grup.setReferencia(dto.referencia);
             grup.setTemporada(dto.temporada);
             grup.setEstat(dto.estat);
@@ -131,39 +170,56 @@ public class GrupPalesController {
             }
             if (dto.proveidor != null && !dto.proveidor.isEmpty()) {
                 clientRepository.findById(Integer.valueOf(dto.proveidor))
-                    .ifPresent(grup::setProveidor);
+                        .ifPresent(grup::setProveidor);
             }
 
-            // Actualitza les pales directament sobre la col·lecció del grup
-            // (la CascadeType.ALL ja farà el save en guardar el grup)
-            if (dto.pales != null && grup.getPales() != null) {
-                dto.pales.forEach(paleDTO -> {
-                    grup.getPales().stream()
-                        .filter(p -> String.valueOf(p.getId_pale()).equals(paleDTO.id))
-                        .findFirst()
-                        .ifPresent(pale -> {
-                            pale.setLot(paleDTO.lot);
-                            pale.setSscc(paleDTO.sscc);
-                            pale.setEstat(paleDTO.estat);
-                            pale.setPaquets(paleDTO.paquets);
-                            pale.setMesures(paleDTO.mesures);
-                            // ✅ Corregit: ara s'actualitza el pes
-                            pale.setPes(paleDTO.pes != null
-                                ? java.math.BigDecimal.valueOf(paleDTO.pes) : null);
-                            if (paleDTO.dataExpedicio != null && !paleDTO.dataExpedicio.isEmpty()) {
-                                pale.setData_expedicio(
-                                    LocalDateTime.parse(paleDTO.dataExpedicio + "T00:00:00"));
-                            }
-                        });
-                });
+            GrupPales guardat = grupPalesRepository.save(grup);
+
+            // Actualitza les pales directament
+            if (dto.pales != null) {
+                for (GrupPalesDTO.PaleDTO paleDTO : dto.pales) {
+                    com.example.backend.domain.Pale paleExistente = null;
+
+                    if (paleDTO.id != null && !paleDTO.id.startsWith("pale-")) {
+                        paleExistente = paleRepository.findById(Integer.valueOf(paleDTO.id)).orElse(null);
+                    }
+
+                    if (paleExistente != null) {
+                        paleExistente.setLot(paleDTO.lot);
+                        paleExistente.setSscc(paleDTO.sscc);
+                        paleExistente.setEstat(paleDTO.estat);
+                        paleExistente.setPaquets(paleDTO.paquets);
+                        paleExistente.setMesures(paleDTO.mesures);
+                        paleExistente.setPes(paleDTO.pes != null ? java.math.BigDecimal.valueOf(paleDTO.pes) : null);
+                        if (paleDTO.dataExpedicio != null && !paleDTO.dataExpedicio.isEmpty()) {
+                            paleExistente.setData_expedicio(LocalDateTime.parse(paleDTO.dataExpedicio + "T00:00:00"));
+                        }
+                        paleRepository.save(paleExistente);
+                    } else {
+                        com.example.backend.domain.Pale novaPale = new com.example.backend.domain.Pale();
+                        novaPale.setLot(paleDTO.lot);
+                        novaPale.setSscc(paleDTO.sscc);
+                        novaPale.setPaquets(paleDTO.paquets);
+                        novaPale.setMesures(paleDTO.mesures);
+                        novaPale.setEstat(paleDTO.estat != null ? paleDTO.estat : "disponible");
+                        novaPale.setPes(paleDTO.pes != null ? java.math.BigDecimal.valueOf(paleDTO.pes) : null);
+                        if (paleDTO.dataExpedicio != null && !paleDTO.dataExpedicio.isEmpty()) {
+                            novaPale.setData_expedicio(LocalDateTime.parse(paleDTO.dataExpedicio + "T00:00:00"));
+                        }
+                        novaPale.setGrupPales(guardat);
+                        com.example.backend.domain.Pale paleGuardat = paleRepository.save(novaPale);
+                        guardat.getPales().add(paleGuardat);
+                    }
+                }
             }
 
-            // Un sol save — la cascada guarda les pales actualitzades
-            return ResponseEntity.ok(grupPalesService.save(grup));
+            entityManager.flush();
+            return ResponseEntity.ok(convertToDTO(guardat));
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // Endpoint per a eliminar un grup de pales segons id: DELETE /api/gruppales/{id}
+    // Endpoint per a eliminar un grup de pales segons id: DELETE
+    // /api/gruppales/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (grupPalesService.findById(id).isPresent()) {

@@ -40,6 +40,7 @@ public class GrupPalesService {
     }
 
     // Guarda un grup de pales amb altre passat per parametre
+    @Transactional
     public GrupPales save(GrupPales grup) {
         return grupPalesRepository.save(grup);
     }

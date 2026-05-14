@@ -131,8 +131,8 @@ public class OrdreService {
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(palesSeleccionados.size());
 
-            // Cambiar estado de los pales a 'reservado'
-            palesSeleccionados.forEach(p -> p.setEstat("reservat"));
+            // Cambiar estado de los pales a 'pendent' (en borrador)
+            palesSeleccionados.forEach(p -> p.setEstat("pendent"));
         }
 
         Ordre guardada = ordreRepository.save(o);
@@ -171,8 +171,8 @@ public class OrdreService {
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(nuevosPales.size());
 
-            // Reservar nuevos pales
-            nuevosPales.forEach(p -> p.setEstat("reservat"));
+            // Reservar nuevos pales (estat pendent en borrador)
+            nuevosPales.forEach(p -> p.setEstat("pendent"));
             o.setPales(nuevosPales);
         }
 
@@ -220,7 +220,7 @@ public class OrdreService {
         o.setCodiAlbara(codiAlbara);
 
         if (o.getPales() != null) {
-            o.getPales().forEach(p -> p.setEstat("reservat"));
+            o.getPales().forEach(p -> p.setEstat("assignada"));
         }
 
         Tracking t = new Tracking();
@@ -247,6 +247,11 @@ public class OrdreService {
 
         o.setEstat(nouEstat);
 
+        // Si l'ordre s'entrega, les pales passen a estar assignades (finalitzades)
+        if ("ENTREGAT".equals(nouEstat) && o.getPales() != null) {
+            o.getPales().forEach(p -> p.setEstat("assignada"));
+        }
+
         Tracking t = new Tracking();
         t.setOrdre(o);
         t.setEtapa(nouEstat);
@@ -269,7 +274,22 @@ public class OrdreService {
         Ordre o = ordreRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
-        userRepository.findById(transportistaId).ifPresent(o::setTransportista);
+        UserAccount transportista = userRepository.findById(transportistaId)
+                .orElseThrow(() -> new RuntimeException("El transportista no existeix"));
+        
+        o.setTransportista(transportista);
+
+        // Afegir entrada al historial (Tracking) per constatar el canvi
+        Tracking t = new Tracking();
+        t.setOrdre(o);
+        t.setEtapa(o.getEstat()); // Mantenim l'estat actual
+        t.setTimestamp(LocalDateTime.now());
+        t.setNotes("Canvi de transportista per incidència: " + transportista.getNom());
+        
+        if (o.getHistorial() == null) {
+            o.setHistorial(new java.util.ArrayList<>());
+        }
+        o.getHistorial().add(t);
 
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);

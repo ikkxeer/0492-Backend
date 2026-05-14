@@ -68,10 +68,12 @@ public class IncidenciaService {
         inc.setEstat("obert");
 
         if (inc.getReportatPer() != null) {
-            inc.getHistorial().add(new EntradaHistorial(
+            EntradaHistorial entrada = new EntradaHistorial(
                     "Incidència creada",
                     "Creada por usuario ID: " + inc.getReportatPer(),
-                    inc.getReportatPer().toString()));
+                    inc.getReportatPer().toString());
+            entrada.setIncidencia(inc);
+            inc.getHistorial().add(entrada);
         }
 
         return populateNoms(repo.save(inc));
@@ -91,7 +93,6 @@ public class IncidenciaService {
         entrada.setAutor(autor);
 
         entrada.setIncidencia(inc);
-
         inc.getHistorial().add(entrada);
 
         return populateNoms(repo.save(inc));
@@ -110,7 +111,6 @@ public class IncidenciaService {
         entrada.setDataHora(LocalDateTime.now());
         entrada.setAutor(autor);
         entrada.setIncidencia(inc);
-
         inc.getHistorial().add(entrada);
 
         return populateNoms(repo.save(inc));

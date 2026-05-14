@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "incidencia")
 public class Incidencia {
-    
+
     // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class Incidencia {
     private Integer idOrdre;
 
     private String titol;
-    
+
     @Column(columnDefinition = "TEXT")
     private String descripcio;
 
@@ -158,7 +158,7 @@ public class Incidencia {
     public void setHistorial(List<EntradaHistorial> historial) {
         this.historial = historial;
     }
-    
+
     public void setReportatPerNom(String reportatPerNom) {
         this.reportatPerNom = reportatPerNom;
     }

@@ -8,8 +8,10 @@ import com.example.backend.domain.Ordre;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repositori per les ordres
@@ -48,4 +50,16 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
     // Contamos las órdenes creadas en un rango de fechas
     @Query("SELECT COUNT(o) FROM Ordre o WHERE o.data_creacio >= :iniciDia AND o.data_creacio <= :fiDia")
     long countByDataCreacioBetween(@Param("iniciDia") java.time.LocalDateTime iniciDia, @Param("fiDia") java.time.LocalDateTime fiDia);
+        
+    // Contem les ordres per estat
+    long countByEstat(String estat);
+
+    // Contem les ordres per estat i data de creació (o entrega)
+    @Query("SELECT COUNT(o) FROM Ordre o WHERE o.estat = :estat AND o.data_creacio >= :inici AND o.data_creacio <= :fi")
+    long countByEstatAndDataCreacioBetween(@Param("estat") String estat, @Param("inici") java.time.LocalDateTime inici, @Param("fi") java.time.LocalDateTime fi);
+
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM ordre_pale WHERE id_pale = :id", nativeQuery = true)
+    void deleteAssociationsByPaleId(@Param("id") Integer id);
 }
