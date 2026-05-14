@@ -50,9 +50,9 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
     // Contamos las órdenes creadas en un rango de fechas
     @Query("SELECT COUNT(o) FROM Ordre o WHERE o.data_creacio >= :iniciDia AND o.data_creacio <= :fiDia")
     long countByDataCreacioBetween(@Param("iniciDia") java.time.LocalDateTime iniciDia, @Param("fiDia") java.time.LocalDateTime fiDia);
-    
+        
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM ordre_pale WHERE id_pale = :idPale", nativeQuery = true)
-    void deleteRelacionPaleOrdre(@Param("idPale") Integer idPale);
+    @Query(value = "DELETE FROM ordre_pale WHERE id_pale = :id", nativeQuery = true)
+    void deleteAssociationsByPaleId(@Param("id") Integer id);
 }
