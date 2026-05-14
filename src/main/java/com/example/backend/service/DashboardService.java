@@ -45,9 +45,9 @@ public class DashboardService {
         dto.setIncidencies(incidenciaRepo.count());
         dto.setIncidenciesPercent(0);
         
-        // Entregades
-        dto.setEntregades(paleRepo.countByEstat("ENTREGAT"));
-        dto.setEntregadesPercent(2);
+        // Entregades (ara sobre ORDRES, no sobre pales individuals)
+        dto.setEntregades(ordreRepo.countByEstat("ENTREGAT"));
+        dto.setEntregadesPercent(0); 
         
         return dto;
     }
@@ -89,8 +89,8 @@ public class DashboardService {
             LocalDate targetMonth = today.minusMonths(i);
             LocalDateTime startOfMonth = targetMonth.withDayOfMonth(1).atStartOfDay();
             LocalDateTime endOfMonth = targetMonth.withDayOfMonth(targetMonth.lengthOfMonth()).atTime(LocalTime.MAX);
-            
-            long total = paleRepo.countByEstatAndDataExpedicioBetween("ENTREGAT", startOfMonth, endOfMonth);
+            // Comptem ORDRES entregades en aquest mes
+            long total = ordreRepo.countByEstatAndDataCreacioBetween("ENTREGAT", startOfMonth, endOfMonth);
             result.add(Map.of("mes", mesos[targetMonth.getMonthValue() - 1], "total", total));
         }
         return result;
