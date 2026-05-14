@@ -131,8 +131,8 @@ public class OrdreService {
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(palesSeleccionados.size());
 
-            // Cambiar estado de los pales a 'assignada'
-            palesSeleccionados.forEach(p -> p.setEstat("assignada"));
+            // Cambiar estado de los pales a 'pendent' (en borrador)
+            palesSeleccionados.forEach(p -> p.setEstat("pendent"));
         }
 
         Ordre guardada = ordreRepository.save(o);
@@ -171,8 +171,8 @@ public class OrdreService {
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(nuevosPales.size());
 
-            // Reservar nuevos pales (estat assignada per al front)
-            nuevosPales.forEach(p -> p.setEstat("assignada"));
+            // Reservar nuevos pales (estat pendent en borrador)
+            nuevosPales.forEach(p -> p.setEstat("pendent"));
             o.setPales(nuevosPales);
         }
 
