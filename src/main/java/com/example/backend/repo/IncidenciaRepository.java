@@ -26,4 +26,6 @@ public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer>
 
     @Query("SELECT i.estat, COUNT(i) FROM Incidencia i GROUP BY i.estat")
     List<Object[]> countByEstat();
+
+    long countByEstat(String estat);
 }

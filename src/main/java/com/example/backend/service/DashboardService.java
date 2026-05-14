@@ -63,19 +63,15 @@ public class DashboardService {
     public List<Map<String, Object>> getOrdresSetmana() {
         LocalDate today = LocalDate.now();
         // Buscar el dilluns de la setmana actual
-        LocalDate startOfWeek = today
-                
-
+        LocalDate startOfWeek = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
         
-          
-
-        
-        
+        List<Map<String, Object>> result = new ArrayList<>();
+        String[] dies = {"Dl", "Dm", "Dc", "Dj", "Dv", "Ds", "Dg"};
         
         for (int i = 0; i < 7; i++) {
-
-            
-            
+            LocalDate currentDay = startOfWeek.plusDays(i);
+            LocalDateTime startOfDay = currentDay.atStartOfDay();
+            LocalDateTime endOfDay = currentDay.atTime(LocalTime.MAX);
             
             long total = ordreRepo.countByDataCreacioBetween(startOfDay, endOfDay);
             result.add(Map.of("dia", dies[i], "total", total));
@@ -83,10 +79,10 @@ public class DashboardService {
         return result;
     }
 
-    public List<Map<String , Object>> getTendenciaEntregues() { 
-
-        
-        
+    public List<Map<String, Object>> getTendenciaEntregues() {
+        LocalDate today = LocalDate.now();
+        List<Map<String, Object>> result = new ArrayList<>();
+        String[] mesos = {"Gen", "Feb", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Des"};
         
         // Mostrar els últims 6 mesos, incloent l'actual
         for (int i = 5; i >= 0; i--) {
@@ -102,18 +98,24 @@ public class DashboardService {
 
     public List<Map<String, Object>> getIncidenciesPerEstat() {
         List<Map<String, Object>> result = new ArrayList<>();
-        result.add(Map.of("name", "Oberta", "value", incidenciaRepo.countByEstat("OBERT")));
-        result.add(Map.of("nam
-                        dd(Map.of(
-                            esult;        ist<Map<String, Object>> getPalesPerGrup() {
+        // Utilitzem els estats que el front-end espera (obert, en_proces, resolt, tancat)
+        result.add(Map.of("name", "obert", "value", incidenciaRepo.countByEstat("obert")));
+        result.add(Map.of("name", "en_proces", "value", incidenciaRepo.countByEstat("en_proces")));
+        result.add(Map.of("name", "resolt", "value", incidenciaRepo.countByEstat("resolt")));
+        result.add(Map.of("name", "tancat", "value", incidenciaRepo.countByEstat("tancat")));
+        return result;
+    }
+
+    public List<Map<String, Object>> getPalesPerGrup() {
         List<Map<String, Object>> result = new ArrayList<>();
         paleRepo.findAll().stream()
-            .filter(p -> p.getGrupPales() != null)
-            .collect(java.util.stream.Collectors.groupingBy(p -> p.getGrupPales().getReferencia(), java.util.stream.Collectors.counting()))
-            .entrySet().stream()
-            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-            .limit(5)
-            .forEach(entry -> result.add(Map.of("name", entry.getKey(), "value", entry.getValue())));
+                .filter(p -> p.getGrupPales() != null)
+                .collect(java.util.stream.Collectors.groupingBy(p -> p.getGrupPales().getReferencia(),
+                        java.util.stream.Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(5)
+                .forEach(entry -> result.add(Map.of("name", entry.getKey(), "value", entry.getValue())));
         return result;
     }
 
