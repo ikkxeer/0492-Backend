@@ -27,12 +27,12 @@ public class DashboardService {
 
     public DashboardStatsDTO getDashboardStats() {
         DashboardStatsDTO dto = new DashboardStatsDTO();
-        
+
         // Pales actives són les que estan en estat DISPONIBLE
         long palesActives = paleRepo.countByEstat("DISPONIBLE");
         dto.setPalesActives(palesActives);
-        dto.setPalesActivesPercent(0); 
-        
+        dto.setPalesActivesPercent(0);
+
         // Ordres avui (reals des de la BBDD)
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();
@@ -40,15 +40,15 @@ public class DashboardService {
         long ordresAvui = ordreRepo.countByDataCreacioBetween(startOfDay, endOfDay);
         dto.setOrdresAvui(ordresAvui);
         dto.setOrdresAvuiPercent(0);
-        
+
         // Incidències
         dto.setIncidencies(incidenciaRepo.count());
         dto.setIncidenciesPercent(0);
-        
+
         // Entregades (ara sobre ORDRES, no sobre pales individuals)
         dto.setEntregades(ordreRepo.countByEstat("ENTREGAT"));
-        dto.setEntregadesPercent(0); 
-        
+        dto.setEntregadesPercent(0);
+
         return dto;
     }
 
@@ -63,15 +63,19 @@ public class DashboardService {
     public List<Map<String, Object>> getOrdresSetmana() {
         LocalDate today = LocalDate.now();
         // Buscar el dilluns de la setmana actual
-        LocalDate startOfWeek = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        LocalDate startOfWeek = today
+                
+
         
-        List<Map<String, Object>> result = new ArrayList<>();
-        String[] dies = {"Dl", "Dm", "Dc", "Dj", "Dv", "Ds", "Dg"};
+          
+
+        
+        
         
         for (int i = 0; i < 7; i++) {
-            LocalDate currentDay = startOfWeek.plusDays(i);
-            LocalDateTime startOfDay = currentDay.atStartOfDay();
-            LocalDateTime endOfDay = currentDay.atTime(LocalTime.MAX);
+
+            
+            
             
             long total = ordreRepo.countByDataCreacioBetween(startOfDay, endOfDay);
             result.add(Map.of("dia", dies[i], "total", total));
@@ -79,10 +83,10 @@ public class DashboardService {
         return result;
     }
 
-    public List<Map<String, Object>> getTendenciaEntregues() {
-        LocalDate today = LocalDate.now();
-        List<Map<String, Object>> result = new ArrayList<>();
-        String[] mesos = {"Gen", "Feb", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Des"};
+    public List<Map<String , Object>> getTendenciaEntregues() { 
+
+        
+        
         
         // Mostrar els últims 6 mesos, incloent l'actual
         for (int i = 5; i >= 0; i--) {
@@ -97,16 +101,28 @@ public class DashboardService {
     }
 
     public List<Map<String, Object>> getIncidenciesPerEstat() {
-        List<Object[]> data = incidenciaRepo.countByEstat();
         List<Map<String, Object>> result = new ArrayList<>();
-        for (Object[] row : data) {
-            String estat = row[0] != null ? row[0].toString() : "Sense estat";
-            // Mapegem noms interns a noms legibles (opcional, ho podem fer al front)
-            result.add(Map.of(
-                "name", estat,
-                "value", row[1]
-            ));
-        }
+        result.add(Map.of("name", "Oberta", "value", incidenciaRepo.countByEstat("OBERT")));
+        result.add(Map.of("nam
+                        dd(Map.of(
+                            esult;        ist<Map<String, Object>> getPalesPerGrup() {
+        List<Map<String, Object>> result = new ArrayList<>();
+        paleRepo.findAll().stream()
+            .filter(p -> p.getGrupPales() != null)
+            .collect(java.util.stream.Collectors.groupingBy(p -> p.getGrupPales().getReferencia(), java.util.stream.Collectors.counting()))
+            .entrySet().stream()
+            .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+            .limit(5)
+            .forEach(entry -> result.add(Map.of("name", entry.getKey(), "value", entry.getValue())));
+        return result;
+    }
+
+    public List<Map<String, Object>> getOrdresPerEstat() {
+        List<Map<String, Object>> result = new ArrayList<>();
+        result.add(Map.of("name", "Pendent", "value", ordreRepo.countByEstat("PENDENT")));
+        result.add(Map.of("name", "Confirmat", "value", ordreRepo.countByEstat("CONFIRMAT")));
+        result.add(Map.of("name", "En Trànsit", "value", ordreRepo.countByEstat("EN TRÀNSIT")));
+        result.add(Map.of("name", "Entregat", "value", ordreRepo.countByEstat("ENTREGAT")));
         return result;
     }
 }
