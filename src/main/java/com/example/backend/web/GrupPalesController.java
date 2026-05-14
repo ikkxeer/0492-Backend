@@ -3,12 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.backend.web;
+
 import com.example.backend.domain.GrupPales;
 import com.example.backend.repo.ClientRepository;
 import com.example.backend.repo.GrupPalesRepository;
 import com.example.backend.repo.PaleRepository;
 import com.example.backend.service.GrupPalesService;
 import com.example.backend.web.dto.GrupPalesDTO;
+
+import jakarta.transaction.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +27,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /**
  * Controlador per gruppales
  * 
  * /api/gruppales: retorna tots els grup de pales
- *  - /total: retorna el total de gruppales
- *  - /{id}: retorna un grup de pale segons l'id
- *  - POST: crea un grup de pale passat per parametre
- *  - PUT /{id}: actualitza un grup de pale passat per parametre
- *  - DELETE /{id}: elimina un grup de pale segons l'id
+ * - /total: retorna el total de gruppales
+ * - /{id}: retorna un grup de pale segons l'id
+ * - POST: crea un grup de pale passat per parametre
+ * - PUT /{id}: actualitza un grup de pale passat per parametre
+ * - DELETE /{id}: elimina un grup de pale segons l'id
  *
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
@@ -44,16 +47,15 @@ public class GrupPalesController {
     // Atributs de la classe
     @Autowired
     private GrupPalesService grupPalesService;
-    
+
     @Autowired
     private GrupPalesRepository grupPalesRepository;
 
     @Autowired
     private PaleRepository paleRepository;
-    
+
     @Autowired
     private ClientRepository clientRepository;
-
 
     // Helper per convertir entitat a DTO amb pales incloses
     private GrupPalesDTO convertToDTO(GrupPales g) {
@@ -76,9 +78,11 @@ public class GrupPalesController {
                 pale.paquets = p.getPaquets();
                 pale.temporada = g.getTemporada();
                 pale.dataExpedicio = p.getData_expedicio() != null
-                    ? p.getData_expedicio().toLocalDate().toString() : "";
-                pale.clientProveidor = g.getProveidor() != null 
-                    ? g.getProveidor().getNom() : "";
+                        ? p.getData_expedicio().toLocalDate().toString()
+                        : "";
+                pale.clientProveidor = g.getProveidor() != null
+                        ? g.getProveidor().getNom()
+                        : "";
                 pale.estat = p.getEstat();
                 return pale;
             }).collect(java.util.stream.Collectors.toList());
@@ -120,7 +124,7 @@ public class GrupPalesController {
         }
         if (dto.proveidor != null && !dto.proveidor.isEmpty()) {
             clientRepository.findById(Integer.valueOf(dto.proveidor))
-                .ifPresent(grup::setProveidor);
+                    .ifPresent(grup::setProveidor);
         }
 
         // Primer guardem el grup per tenir ID
@@ -162,7 +166,7 @@ public class GrupPalesController {
             }
             if (dto.proveidor != null && !dto.proveidor.isEmpty()) {
                 clientRepository.findById(Integer.valueOf(dto.proveidor))
-                    .ifPresent(grup::setProveidor);
+                        .ifPresent(grup::setProveidor);
             }
 
             GrupPales guardat = grupPalesRepository.save(grup);
@@ -171,7 +175,7 @@ public class GrupPalesController {
             if (dto.pales != null) {
                 for (GrupPalesDTO.PaleDTO paleDTO : dto.pales) {
                     com.example.backend.domain.Pale paleExistente = null;
-                    
+
                     if (paleDTO.id != null && !paleDTO.id.startsWith("pale-")) {
                         paleExistente = paleRepository.findById(Integer.valueOf(paleDTO.id)).orElse(null);
                     }
@@ -208,7 +212,8 @@ public class GrupPalesController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // Endpoint per a eliminar un grup de pales segons id: DELETE /api/gruppales/{id}
+    // Endpoint per a eliminar un grup de pales segons id: DELETE
+    // /api/gruppales/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (grupPalesService.findById(id).isPresent()) {
