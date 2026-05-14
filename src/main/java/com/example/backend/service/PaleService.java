@@ -4,12 +4,15 @@
  */
 package com.example.backend.service;
 
+import com.example.backend.domain.Ordre;
 import com.example.backend.domain.Pale;
+import com.example.backend.repo.OrdreRepository;
 import com.example.backend.repo.PaleRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service per els pales
@@ -21,6 +24,9 @@ public class PaleService {
 
     @Autowired
     private PaleRepository paleRepository;
+    
+    @Autowired
+    private OrdreRepository ordreRepository;
 
     // Devolver numero total de pales
     public long getTotalPales() {
@@ -47,9 +53,20 @@ public class PaleService {
         return paleRepository.countByEstat(estado);
     }
 
-    // Eliminar por ID
+    @Transactional
     public void deletePale(Integer id) {
-        paleRepository.deleteById(id);
+        Pale pale = paleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("El palé no existe"));
+
+        List<Ordre> ordres = ordreRepository.findAll(); 
+        for (Ordre o : ordres) {
+            if (o.getPales() != null && o.getPales().contains(pale)) {
+                o.getPales().remove(pale);
+                ordreRepository.save(o); 
+            }
+        }
+
+        paleRepository.delete(pale);
     }
 
 }
