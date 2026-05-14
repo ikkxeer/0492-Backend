@@ -108,6 +108,9 @@ public class GrupPalesController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @Autowired
+    private jakarta.persistence.EntityManager entityManager;
+
     // Endpoint per crear un nou grup de pales: POST /api/gruppales
     @PostMapping
     @Transactional
@@ -144,12 +147,13 @@ public class GrupPalesController {
                     p.setData_expedicio(LocalDateTime.parse(paleDTO.dataExpedicio + "T00:00:00"));
                 }
                 p.setGrupPales(guardat);
-                paleRepository.save(p); // Guardem cada pale individualment
+                com.example.backend.domain.Pale paleGuardat = paleRepository.save(p);
+                guardat.getPales().add(paleGuardat); // Manté la llista en sincronia
             }
         }
 
-        // Refresquem el grup per retornar-lo amb les pales
-        return convertToDTO(grupPalesRepository.findById(guardat.getId_grup_pales()).get());
+        entityManager.flush(); // Força sincronització amb la BD
+        return convertToDTO(guardat);
     }
 
     // Endpoint per a actualitzar un grup de pales: PUT /api/gruppales/{id}
@@ -203,12 +207,14 @@ public class GrupPalesController {
                             novaPale.setData_expedicio(LocalDateTime.parse(paleDTO.dataExpedicio + "T00:00:00"));
                         }
                         novaPale.setGrupPales(guardat);
-                        paleRepository.save(novaPale);
+                        com.example.backend.domain.Pale paleGuardat = paleRepository.save(novaPale);
+                        guardat.getPales().add(paleGuardat);
                     }
                 }
             }
 
-            return ResponseEntity.ok(convertToDTO(grupPalesRepository.findById(id).get()));
+            entityManager.flush();
+            return ResponseEntity.ok(convertToDTO(guardat));
         }).orElse(ResponseEntity.notFound().build());
     }
 
