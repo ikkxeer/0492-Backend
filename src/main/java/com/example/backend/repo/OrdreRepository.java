@@ -8,8 +8,10 @@ import com.example.backend.domain.Ordre;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repositori per les ordres
@@ -48,4 +50,9 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
     // Contamos las órdenes creadas en un rango de fechas
     @Query("SELECT COUNT(o) FROM Ordre o WHERE o.data_creacio >= :iniciDia AND o.data_creacio <= :fiDia")
     long countByDataCreacioBetween(@Param("iniciDia") java.time.LocalDateTime iniciDia, @Param("fiDia") java.time.LocalDateTime fiDia);
+    
+    @Transactional
+    @Modifying
+    @Query(value = "DELETE FROM ordre_pale WHERE id_pale = :idPale", nativeQuery = true)
+    void deleteRelacionPaleOrdre(@Param("idPale") Integer idPale);
 }

@@ -55,19 +55,17 @@ public class PaleService {
 
     @Transactional
     public void deletePale(Integer id) {
-        Pale pale = paleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("El palé no existe"));
-
-        List<Ordre> ordres = ordreRepository.findAll(); 
-        
-        for (Ordre o : ordres) {
-            if (o.getPales() != null && o.getPales().contains(pale)) {
-                o.getPales().remove(pale);
-                ordreRepository.save(o); 
-            }
+        if (!paleRepository.existsById(id)) {
+            throw new RuntimeException("El palé con ID " + id + " no existe.");
         }
 
-        paleRepository.delete(pale);
+        try {
+            ordreRepository.deleteRelacionPaleOrdre(id);
+            paleRepository.flush(); 
+            paleRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar el palé: " + e.getMessage());
+        }
     }
 
 }
