@@ -274,7 +274,22 @@ public class OrdreService {
         Ordre o = ordreRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
-        userRepository.findById(transportistaId).ifPresent(o::setTransportista);
+        UserAccount transportista = userRepository.findById(transportistaId)
+                .orElseThrow(() -> new RuntimeException("El transportista no existeix"));
+        
+        o.setTransportista(transportista);
+
+        // Afegir entrada al historial (Tracking) per constatar el canvi
+        Tracking t = new Tracking();
+        t.setOrdre(o);
+        t.setEtapa(o.getEstat()); // Mantenim l'estat actual
+        t.setTimestamp(LocalDateTime.now());
+        t.setNotes("Canvi de transportista per incidència: " + transportista.getNom());
+        
+        if (o.getHistorial() == null) {
+            o.setHistorial(new java.util.ArrayList<>());
+        }
+        o.getHistorial().add(t);
 
         Ordre guardada = ordreRepository.save(o);
         return new OrdreDTO(guardada);
