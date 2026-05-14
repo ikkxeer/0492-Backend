@@ -51,8 +51,7 @@ public class Incidencia {
     @Column(name = "data_creacio")
     private LocalDateTime dataCreacio;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "incidencia_id")
+    @OneToMany(mappedBy = "incidencia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EntradaHistorial> historial = new ArrayList<>();
 
     @Transient

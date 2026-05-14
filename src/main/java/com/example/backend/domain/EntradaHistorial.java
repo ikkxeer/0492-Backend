@@ -43,9 +43,9 @@ public class EntradaHistorial {
     private LocalDateTime dataHora;
     private String autor;
     
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JsonIgnore
-    @JoinColumn(name = "incidencia_id")
+    @JoinColumn(name = "incidencia_id", nullable = false)
     private Incidencia incidencia;
     
     // Getters
