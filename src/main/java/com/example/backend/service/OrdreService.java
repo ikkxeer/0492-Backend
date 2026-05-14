@@ -131,8 +131,8 @@ public class OrdreService {
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(palesSeleccionados.size());
 
-            // Cambiar estado de los pales a 'reservado'
-            palesSeleccionados.forEach(p -> p.setEstat("reservat"));
+            // Cambiar estado de los pales a 'assignada'
+            palesSeleccionados.forEach(p -> p.setEstat("assignada"));
         }
 
         Ordre guardada = ordreRepository.save(o);
@@ -171,8 +171,8 @@ public class OrdreService {
             o.setPesTotal(sumaPes);
             o.setQuantitatPales(nuevosPales.size());
 
-            // Reservar nuevos pales
-            nuevosPales.forEach(p -> p.setEstat("reservat"));
+            // Reservar nuevos pales (estat assignada per al front)
+            nuevosPales.forEach(p -> p.setEstat("assignada"));
             o.setPales(nuevosPales);
         }
 
@@ -220,7 +220,7 @@ public class OrdreService {
         o.setCodiAlbara(codiAlbara);
 
         if (o.getPales() != null) {
-            o.getPales().forEach(p -> p.setEstat("reservat"));
+            o.getPales().forEach(p -> p.setEstat("assignada"));
         }
 
         Tracking t = new Tracking();
@@ -246,6 +246,11 @@ public class OrdreService {
                 .orElseThrow(() -> new RuntimeException("L'ordre no existeix"));
 
         o.setEstat(nouEstat);
+
+        // Si l'ordre s'entrega, les pales passen a estar assignades (finalitzades)
+        if ("ENTREGAT".equals(nouEstat) && o.getPales() != null) {
+            o.getPales().forEach(p -> p.setEstat("assignada"));
+        }
 
         Tracking t = new Tracking();
         t.setOrdre(o);
