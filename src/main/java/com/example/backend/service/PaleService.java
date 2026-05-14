@@ -59,6 +59,7 @@ public class PaleService {
                 .orElseThrow(() -> new RuntimeException("El palé no existe"));
 
         List<Ordre> ordres = ordreRepository.findAll(); 
+        
         for (Ordre o : ordres) {
             if (o.getPales() != null && o.getPales().contains(pale)) {
                 o.getPales().remove(pale);
