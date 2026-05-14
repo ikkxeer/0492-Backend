@@ -26,6 +26,10 @@ import java.util.List;
 @Table(name = "gruppales")
 public class GrupPales {
 
+    public GrupPales() {
+        this.pales = new java.util.ArrayList<>();
+    }
+
     // Columnes de la taula
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
