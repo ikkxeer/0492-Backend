@@ -1,6 +1,7 @@
 package com.example.backend.web.dto;
 
 public class DashboardStatsDTO {
+    // Atributs de la classe
     private long palesActives;
     private int palesActivesPercent;
     private long ordresAvui;
@@ -10,8 +11,11 @@ public class DashboardStatsDTO {
     private long entregades;
     private int entregadesPercent;
 
-    public DashboardStatsDTO() {}
+    // Constructor de la classe
+    public DashboardStatsDTO() {
+    }
 
+    // Getters i Setters de la classe
     public long getPalesActives() {
         return palesActives;
     }

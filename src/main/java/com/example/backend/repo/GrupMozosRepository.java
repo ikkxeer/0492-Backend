@@ -17,12 +17,12 @@ import org.springframework.data.repository.query.Param;
  */
 public interface GrupMozosRepository extends JpaRepository<GrupMozos, Integer> {
     
-    // Consulta para encontrar el grupo a través de la tabla intermedia
+    // Consulta per trobar el grup a través de la taula intermèdia
     @Query(value = "SELECT g.* FROM grupmozos g " +
                    "JOIN grupmozos_usuaris gu ON g.id_grup = gu.id_grup " +
                    "WHERE gu.id_usuari = :idUsuari", nativeQuery = true)
     Optional<GrupMozos> findByUsuariId(@Param("idUsuari") Integer idUsuari);
 
+    // Troba un grup de mozos pel seu nom
     Optional<GrupMozos> findByNom(String nom);
 }
-

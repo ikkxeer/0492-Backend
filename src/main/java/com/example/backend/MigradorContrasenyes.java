@@ -21,7 +21,7 @@ public class MigradorContrasenyes implements ApplicationRunner {
     /**
      * Constructor por defecto de MigradorContrasenyes
      * 
-     * @param userRepository Repositorio de usuarios
+     * @param userRepository  Repositorio de usuarios
      * @param passwordEncoder Encriptador de contrasenyes
      */
     public MigradorContrasenyes(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -29,7 +29,8 @@ public class MigradorContrasenyes implements ApplicationRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Al ejecutarse, modifica la contraseña del usuario a una encripada con passwordEncoder
+    // Al ejecutarse, modifica la contraseña del usuario a una encripada con
+    // passwordEncoder
     @Override
     public void run(ApplicationArguments args) {
         userRepository.findAll().forEach(user -> {

@@ -2,10 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.backend.web;
 
 import com.example.backend.domain.GrupPales;
@@ -31,7 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controlador pels pales
- * * /api/pales (GET): Retorna tots els pales
+ * 
+ * /api/pales (GET): Retorna tots els pales
  * - /api/pales/{id} (GET): Retorna un pale especific segons ID
  * - /total (GET): retorna el total de pales
  * - POST: Crea un pale passat per el body
@@ -44,7 +41,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/pales")
 public class PaleController {
-    // Atrbiuts de la classe
+
+    // Atributs de la classe
     @Autowired
     private PaleService paleService;
     
@@ -54,8 +52,7 @@ public class PaleController {
     @Autowired
     private GrupPalesRepository grupPalesRepository;
 
-
-    // Endpoint para obtener el total: GET /api/pales/total
+    // Endpoint per obtenir el total: GET /api/pales/total
     @GetMapping("/total")
     public long countAll() {
         return paleService.getTotalPales();
@@ -67,7 +64,7 @@ public class PaleController {
         return paleService.findAllPales();
     }
 
-    // Endpoint per obtenir un pale en especific segons el id: GET /api/pales/{id}
+    // Endpoint per obtenir un pale específic segons id: GET /api/pales/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Pale> getById(@PathVariable Integer id) {
         return paleService.findPaleById(id)
@@ -75,10 +72,9 @@ public class PaleController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    // Endpoint per obtenir tots els pales segons estat passat per parametre: GET /api/pales/total/estado
+    // Endpoint per obtenir el total de pales segons estat: GET /api/pales/total/estado
     @GetMapping("/total/estado")
     public long countByEstado(@RequestParam String nombre) {
-        // Usamos el objeto inyectado 'paleService' (en minúscula)
         return paleService.countByEstado(nombre); 
     }
     
@@ -121,7 +117,7 @@ public class PaleController {
         }).orElse(ResponseEntity.notFound().build());
     }
     
-    // Endpoint per eliminar un pale: DELETE /api/pales/{id} 
+    // Endpoint per eliminar un pale: DELETE /api/pales/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (!paleRepository.existsById(id)) {

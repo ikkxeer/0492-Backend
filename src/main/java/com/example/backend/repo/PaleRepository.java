@@ -18,12 +18,13 @@ import org.springframework.data.repository.query.Param;
 public interface PaleRepository extends JpaRepository<Pale, Integer> {
     // Aixó genera, SELECT COUNT(*) FROM pale WHERE estat = ?
     long countByEstat(String estat);
-    
-    
+
     // Query per trobar totes les pales que perteneixen a un grup de pales
     @Query("SELECT p FROM Pale p WHERE p.grupPales.id_grup_pales = :idGrup")
     List<Pale> findByIdGrupPales(@Param("idGrup") Integer idGrup);
 
+    // Query per comptar les pales per estat i data d'expedició
     @Query("SELECT COUNT(p) FROM Pale p WHERE p.estat = :estat AND p.data_expedicio >= :inici AND p.data_expedicio <= :fi")
-    long countByEstatAndDataExpedicioBetween(@Param("estat") String estat, @Param("inici") java.time.LocalDateTime inici, @Param("fi") java.time.LocalDateTime fi);
+    long countByEstatAndDataExpedicioBetween(@Param("estat") String estat,
+            @Param("inici") java.time.LocalDateTime inici, @Param("fi") java.time.LocalDateTime fi);
 }

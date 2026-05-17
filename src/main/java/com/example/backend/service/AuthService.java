@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.example.backend.service;
 
 import com.example.backend.domain.UserAccount;
@@ -26,6 +30,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
+    // Autenticar l'usuari i retornar un token JWT
     public String login(String email, String rawPassword) {
         System.out.println("INTENT DE LOGIN DE: " + email);
         System.out.println("PASSWORD: [" + rawPassword + "]");

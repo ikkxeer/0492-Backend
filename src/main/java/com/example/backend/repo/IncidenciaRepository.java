@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 /**
+ * Repositori per les incidencies
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @Repository
 public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer> {
@@ -24,8 +26,10 @@ public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer>
     @Query("SELECT i FROM Incidencia i WHERE i.assignatA = :userId")
     List<Incidencia> findByAssignatA(@Param("userId") Integer userId);
 
+    // Agrupa i compta les incidències per estat
     @Query("SELECT i.estat, COUNT(i) FROM Incidencia i GROUP BY i.estat")
     List<Object[]> countByEstat();
 
+    // Aixó genera, SELECT COUNT(*) FROM incidencia WHERE estat = ?
     long countByEstat(String estat);
 }

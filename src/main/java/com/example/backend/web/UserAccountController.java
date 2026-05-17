@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.example.backend.web;
+
 import com.example.backend.domain.UserAccount;
 import com.example.backend.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,55 +34,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/usuaris")
 public class UserAccountController {
 
+    // Atributs de la classe
     @Autowired
     private UserAccountService userService;
 
-    // GET - Obtenir tots els usuaris
+    // Endpoint per obtenir tots els usuaris: GET /api/usuaris
     @GetMapping
     public List<UserAccount> getAll() {
         return userService.getAllUsers();
     }
     
-/**
-     * GET - Obtener usuario por ID
-     * * @param id ID a buscar
-     * @return Usuari complet
-     */
-    @GetMapping("/{id}") // Cambiado de /search a /{id} para que sea RESTful
+    // Endpoint per obtenir un usuari específic per ID: GET /api/usuaris/{id}
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Integer id) {
         return userService.getUserById(id)
                 .map(user -> ResponseEntity.ok(user))
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    /**
-     * DELETE para eliminar usurios segun el id
-     * 
-     * @PathVariable es para pillar lo que pasa entre {} y usarlo como id
-     * 
-     * @param id Id usuario a eliminar
-     * @return Usuari eliminat
-     */
+    // Endpoint per eliminar un usuari: DELETE /api/usuaris/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         boolean deleted = userService.deleteUser(id);
         if (deleted) {
-            // 204 No Content es el código estándar cuando algo se borra con éxito y no devuelves nada
+            // Retornem 204 si s'ha eliminat correctament
             return ResponseEntity.noContent().build(); 
         } else {
-            // 404 si el ID no existía
+            // Retornem 404 si no existia l'usuari
             return ResponseEntity.notFound().build();
         }
     }
     
-    /**
-     * POST per a crear un usuari
-     * 
-     * @RequestBody per a obtenir les dades que arriben desde el cos
-     * 
-     * @param user Usuari a crear
-     * @return Usuari creat
-     */
+    // Endpoint per crear un usuari: POST /api/usuaris
     @PostMapping
     public ResponseEntity<UserAccount> create(@RequestBody UserAccount user) {
         UserAccount nuevoUsuario = userService.createUser(user);
@@ -89,35 +73,21 @@ public class UserAccountController {
         return ResponseEntity.status(201).body(nuevoUsuario);
     }
     
-    /**
-     * PUT per a fer update a un usuari
-     * 
-     * @param id Id usuari a modificar
-     * @param datosNuevos Usuari amb les noves dades
-     * @return 
-     */
+    // Endpoint per actualitzar un usuari: PUT /api/usuaris/{id}
     @PutMapping("/{id}")
     public ResponseEntity<UserAccount> update(@PathVariable Integer id, @RequestBody UserAccount user) {
-        // Fem l'update i guardem el resultat a una variable
         UserAccount actualizado = userService.updateUser(id, user);
 
-        // Comprovem si ho ha actualitzat
         if (actualizado != null) {
-            // Si existeix retornem 201 com a trobat
+            // Retornem 200 amb l'usuari actualitzat
             return ResponseEntity.ok(actualizado);
         } else {
-            // Si no existeix, retornem 404
+            // Retornem 404 si no s'ha trobat
             return ResponseEntity.notFound().build();
         }
     }
 
-    /**
-     * POST per restablir la contrasenya d'un usuari
-     * 
-     * @param id Id usuari
-     * @param body Body amb la nova contrasenya
-     * @return 200 OK si s'ha actualitzat, 404 si no existeix
-     */
+    // Endpoint per restablir la contrasenya d'un usuari: POST /api/usuaris/{id}/reset-password
     @PostMapping("/{id}/reset-password")
     public ResponseEntity<?> resetPassword(@PathVariable Integer id, @RequestBody java.util.Map<String, String> body) {
         String contrasenya = body.get("contrasenya");

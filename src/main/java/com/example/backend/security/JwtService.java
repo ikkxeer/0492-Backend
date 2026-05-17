@@ -24,22 +24,21 @@ public class JwtService {
     public String issueToken(String userId, String username, Integer idRol) {
         Instant now = Instant.now();
         return Jwts.builder()
-            .subject(username)
-            .issuedAt(Date.from(now))
-            .expiration(Date.from(now.plusSeconds(1800)))
-            .claims(Map.of(
-                "userId", userId,
-                "idRol", idRol
-            ))
-            .signWith(key)
-            .compact();
+                .subject(username)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plusSeconds(1800)))
+                .claims(Map.of(
+                        "userId", userId,
+                        "idRol", idRol))
+                .signWith(key)
+                .compact();
     }
 
     public Claims parse(String token) {
         return Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload();
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

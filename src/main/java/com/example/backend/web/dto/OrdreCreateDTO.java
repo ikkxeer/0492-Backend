@@ -7,10 +7,12 @@ package com.example.backend.web.dto;
 import java.util.List;
 
 /**
- *
- * @author samui
+ * DTO per la creació d'ordres
+ * 
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public class OrdreCreateDTO {
+    // Atributs de la classe
     public String adreca;
     public String ciutat;
     public String cp;
@@ -22,5 +24,7 @@ public class OrdreCreateDTO {
     public Double preu;
     public String tendaDestinataria;
 
-    public OrdreCreateDTO() {}
+    // Constructor de la classe
+    public OrdreCreateDTO() {
+    }
 }

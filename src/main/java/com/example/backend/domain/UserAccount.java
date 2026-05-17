@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.example.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -6,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Taula 'usauri' representada amb getters i setters
+ * Taula 'usuari' representada amb getters i setters
  * 
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */

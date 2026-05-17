@@ -33,6 +33,7 @@ import org.springframework.http.HttpStatus;
 @CrossOrigin(origins = "*")
 public class OrdreController {
 
+    // Atributs de la classe
     @Autowired
     private OrdreService ordreService;
 
@@ -87,7 +88,7 @@ public class OrdreController {
         return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
     }
 
-    // Endpoint per actualizar una ordre: PUT /api/ordres/{id}
+    // Endpoint per actualitzar una ordre: PUT /api/ordres/{id}
     @PutMapping("/{id}")
     public ResponseEntity<OrdreDTO> actualizar(@PathVariable Integer id, @RequestBody OrdreCreateDTO dto) {
         try {
@@ -98,6 +99,7 @@ public class OrdreController {
         }
     }
 
+    // Endpoint per confirmar una ordre: PUT /api/ordres/{id}/confirmar
     @PutMapping("/{id}/confirmar")
     public ResponseEntity<OrdreDTO> confirmar(
             @PathVariable Integer id,
@@ -110,6 +112,7 @@ public class OrdreController {
         }
     }
 
+    // Endpoint per canviar l'estat d'una ordre: PUT /api/ordres/{id}/estat
     @PutMapping("/{id}/estat")
     public ResponseEntity<OrdreDTO> canviarEstat(
             @PathVariable Integer id,
@@ -122,6 +125,7 @@ public class OrdreController {
         }
     }
 
+    // Endpoint per assignar un transportista a una ordre: PUT /api/ordres/{id}/transportista
     @PutMapping("/{id}/transportista")
     public ResponseEntity<OrdreDTO> assignarTransportista(
             @PathVariable Integer id,

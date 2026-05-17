@@ -34,17 +34,18 @@ public class GrupPalesService {
         return grupPalesRepository.findAll();
     }
 
-    // Troba un pale segons l'ID
+    // Troba un grup de pales segons l'ID
     public Optional<GrupPales> findById(Integer id) {
         return grupPalesRepository.findById(id);
     }
 
-    // Guarda un grup de pales amb altre passat per parametre
+    // Guarda un grup de pales passat per paràmetre
     @Transactional
     public GrupPales save(GrupPales grup) {
         return grupPalesRepository.save(grup);
     }
 
+    // Elimina un grup de pales i les seves associacions amb ordres
     @Transactional
     public void delete(Integer id) {
         String sql = "DELETE FROM ordre_pale WHERE id_pale IN (SELECT id_pale FROM pale WHERE id_grup_pales = :idGrup)";

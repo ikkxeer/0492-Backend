@@ -31,13 +31,13 @@ public class GrupMozosController {
     @Autowired
     private GrupMozosService grupMozosService;
 
-    // Endpoint para obtener el total: GET /api/grupmozos/total
+    // Endpoint per obtenir el total: GET /api/grupmozos/total
     @GetMapping("/total")
     public long countAll() {
         return grupMozosService.getTotalGrupMozos();
     }
     
-    // Mandar la id del usuario mozo y retornar su grupo
+    // Endpoint per obtenir el grup d'un usuari mozo: GET /api/grupmozos/usuario/{idUsuari}
     @GetMapping("/usuario/{idUsuari}")
     public ResponseEntity<GrupMozos> getGrupoPorUsuario(@PathVariable Integer idUsuari) {
         return grupMozosService.getGrupoByUsuariId(idUsuari)
@@ -45,7 +45,7 @@ public class GrupMozosController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    // Endpoint para obtener todos los grupos de mozo: GET /api/grupmozos
+    // Endpoint per obtenir tots els grups de mozos: GET /api/grupmozos
     @GetMapping
     public List<GrupMozos> getAll() {
         return grupMozosService.getAllGrupMozos();

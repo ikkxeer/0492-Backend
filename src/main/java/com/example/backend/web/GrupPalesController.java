@@ -57,6 +57,9 @@ public class GrupPalesController {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private jakarta.persistence.EntityManager entityManager;
+
     // Helper per convertir entitat a DTO amb pales incloses
     private GrupPalesDTO convertToDTO(GrupPales g) {
         GrupPalesDTO dto = new GrupPalesDTO();
@@ -92,7 +95,7 @@ public class GrupPalesController {
         return dto;
     }
 
-    // Endpoint per obtenir les tots els grups de pales: GET /api/gruppales
+    // Endpoint per obtenir tots els grups de pales: GET /api/gruppales
     @GetMapping
     public List<GrupPalesDTO> getAll() {
         return grupPalesRepository.findAll().stream()
@@ -107,9 +110,6 @@ public class GrupPalesController {
                 .map(g -> ResponseEntity.ok(convertToDTO(g)))
                 .orElse(ResponseEntity.notFound().build());
     }
-
-    @Autowired
-    private jakarta.persistence.EntityManager entityManager;
 
     // Endpoint per crear un nou grup de pales: POST /api/gruppales
     @PostMapping
@@ -148,15 +148,16 @@ public class GrupPalesController {
                 }
                 p.setGrupPales(guardat);
                 com.example.backend.domain.Pale paleGuardat = paleRepository.save(p);
-                guardat.getPales().add(paleGuardat); // Manté la llista en sincronia
+                guardat.getPales().add(paleGuardat);
             }
         }
 
-        entityManager.flush(); // Força sincronització amb la BD
+        // Força sincronització amb la BD
+        entityManager.flush();
         return convertToDTO(guardat);
     }
 
-    // Endpoint per a actualitzar un grup de pales: PUT /api/gruppales/{id}
+    // Endpoint per actualitzar un grup de pales: PUT /api/gruppales/{id}
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<GrupPalesDTO> update(@PathVariable Integer id, @RequestBody GrupPalesDTO dto) {
@@ -218,8 +219,7 @@ public class GrupPalesController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    // Endpoint per a eliminar un grup de pales segons id: DELETE
-    // /api/gruppales/{id}
+    // Endpoint per eliminar un grup de pales segons id: DELETE /api/gruppales/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         if (grupPalesService.findById(id).isPresent()) {
@@ -229,7 +229,7 @@ public class GrupPalesController {
         return ResponseEntity.notFound().build();
     }
 
-    // Endpoint per a obtenir el total de grup de pales: GET /api/gruppales/total
+    // Endpoint per obtenir el total de grups de pales: GET /api/gruppales/total
     @GetMapping("/total")
     public long countAll() {
         return grupPalesService.findAll().size();

@@ -27,8 +27,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -45,14 +45,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                     String username = claims.getSubject(); // en tu diseño: subject = username
                     List<String> roles = claims.get("roles", List.class);
-                    if (roles == null) roles = List.of();
+                    if (roles == null)
+                        roles = List.of();
 
                     var authorities = roles.stream()
                             .map(SimpleGrantedAuthority::new) // ya vienen como ROLE_ADMIN/ROLE_USER
                             .toList();
 
-                    var authentication =
-                            new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    var authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
 
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -80,9 +80,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private String extractCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
-        if (cookies == null) return null;
+        if (cookies == null)
+            return null;
         for (Cookie c : cookies) {
-            if (name.equals(c.getName())) return c.getValue();
+            if (name.equals(c.getName()))
+                return c.getValue();
         }
         return null;
     }

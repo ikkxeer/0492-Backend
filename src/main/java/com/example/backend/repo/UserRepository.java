@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package com.example.backend.repo;
 
@@ -14,5 +14,6 @@ import java.util.Optional;
  * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 public interface UserRepository extends JpaRepository<UserAccount, Integer> {
+    // Troba un usuari per email
     Optional<UserAccount> findByEmail(String email);
 }

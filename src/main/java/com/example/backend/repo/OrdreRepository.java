@@ -20,14 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
 
-    // Sacamos las órdenes filtrando por el nombre del gestor asignado
+    // Troba les ordres filtrant pel nom del gestor assignat
     @Query(value = "SELECT o.* FROM ordre o " +
                    "INNER JOIN usuari u ON o.id_gestor = u.id " +
                    "WHERE u.nom = :nom",
            nativeQuery = true)
     List<Ordre> findByGestorNom(@Param("nom") String nom);
 
-    // Buscamos órdenes asociadas a un mozo navegando a través de los grupos y la tabla intermedia.
+    // Troba les ordres associades a un mozo a través de la taula intermèdia
     @Query(value = "SELECT o.* FROM ordre o " +
                    "INNER JOIN grupmozos gm ON o.id_grup_mozos = gm.id_grup " +
                    "INNER JOIN grupmozos_usuaris gmu ON gm.id_grup = gmu.id_grup " +
@@ -36,28 +36,29 @@ public interface OrdreRepository extends JpaRepository<Ordre, Integer> {
            nativeQuery = true)
     List<Ordre> findByGrupoMozoUsuarioNom(@Param("nomMozo") String nomMozo);
 
-    // Buscamos órdenes que tiene asignadas un transportista específico por su nombre
+    // Troba les ordres assignades a un transportista específic pel seu nom
     @Query(value = "SELECT o.* FROM ordre o " +
                    "INNER JOIN usuari u ON o.id_transportista = u.id " +
                    "WHERE u.nom = :nom",
            nativeQuery = true)
     List<Ordre> findByTransportistaNom(@Param("nom") String nom);
     
-    // Buscamos por una orden con los pales incluidos (todo junto)
+    // Troba una ordre amb els pales inclosos
     @Query("SELECT o FROM Ordre o LEFT JOIN FETCH o.pales WHERE o.identificador = :id")
     Optional<Ordre> findByIdentificadorWithPales(@Param("id") String id);
 
-    // Contamos las órdenes creadas en un rango de fechas
+    // Compta les ordres creades en un rang de dates
     @Query("SELECT COUNT(o) FROM Ordre o WHERE o.data_creacio >= :iniciDia AND o.data_creacio <= :fiDia")
     long countByDataCreacioBetween(@Param("iniciDia") java.time.LocalDateTime iniciDia, @Param("fiDia") java.time.LocalDateTime fiDia);
         
-    // Contem les ordres per estat
+    // Compta les ordres per estat
     long countByEstat(String estat);
 
-    // Contem les ordres per estat i data de creació (o entrega)
+    // Compta les ordres per estat i data de creació
     @Query("SELECT COUNT(o) FROM Ordre o WHERE o.estat = :estat AND o.data_creacio >= :inici AND o.data_creacio <= :fi")
     long countByEstatAndDataCreacioBetween(@Param("estat") String estat, @Param("inici") java.time.LocalDateTime inici, @Param("fi") java.time.LocalDateTime fi);
 
+    // Elimina les associacions de la taula intermèdia per id de pale
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM ordre_pale WHERE id_pale = :id", nativeQuery = true)

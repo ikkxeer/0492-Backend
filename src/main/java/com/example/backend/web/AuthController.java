@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.example.backend.web;
 
 import com.example.backend.service.AuthService;
@@ -25,16 +29,12 @@ public class AuthController {
     // Atributs de la classe
     private final AuthService authService;
 
-    /**
-     * Constructor default de la classe
-     * 
-     * @param authService Servei d'autenticació
-     */
+    // Constructor de la classe
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
-    // /api/auth/login para hacer el login
+    // Endpoint per fer el login: POST /api/auth/login
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         String token = authService.login(request.email(), request.password());

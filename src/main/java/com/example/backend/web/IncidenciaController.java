@@ -14,11 +14,12 @@ import org.springframework.http.ResponseEntity;
 
 /**
  * Controlador per incidencies
- * * /api/incidencies: retorna les incidencies segons el rol
+ * 
+ * /api/incidencies: retorna les incidencies segons el rol
  * - POST: crea una incidencia passada per parametre
  * - PATCH /{id}/estat: actualitza l'estat d'una incidencia
  *
- * @author samui
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
  */
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,7 +30,7 @@ public class IncidenciaController {
     @Autowired
     private IncidenciaService service;
 
-    // Endpoint per obtenir unes incidencies segons rol: GET /api/incidencies
+    // Endpoint per obtenir les incidències segons rol: GET /api/incidencies
     @GetMapping
     public List<Incidencia> listar(
             @RequestParam String rol, 
@@ -37,13 +38,13 @@ public class IncidenciaController {
         return service.obtenerSegunRol(rol, userId);
     }
 
-    // Endpoint per crear una incidencia: POST /api/incidencies
+    // Endpoint per crear una incidència: POST /api/incidencies
     @PostMapping
     public Incidencia crear(@RequestBody Incidencia inc) {
         return service.crear(inc);
     }
     
-    // Endpoint per a modificar l'estat d'una incidencia: PATCH /api/incidencies/{id}/estat
+    // Endpoint per modificar l'estat d'una incidència: PATCH /api/incidencies/{id}/estat
     @PatchMapping("/{id}/estat")
     public ResponseEntity<Incidencia> modificarEstat(
             @PathVariable Integer id,
@@ -54,7 +55,7 @@ public class IncidenciaController {
         return ResponseEntity.ok(actualizada);
     }
     
-    // Endpoint per a assignar un responsable: PATCH /api/incidencies/{id}/assignar
+    // Endpoint per assignar un responsable a una incidència: PATCH /api/incidencies/{id}/assignar
     @PatchMapping("/{id}/assignar")
     public ResponseEntity<Incidencia> assignarResponsable(
             @PathVariable Integer id,

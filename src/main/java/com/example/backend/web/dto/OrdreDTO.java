@@ -9,7 +9,13 @@ import com.example.backend.domain.Pale;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DTO per representar les ordres
+ * 
+ * @author Iker Aramburu, Pau Vico i Steeven Bagner
+ */
 public class OrdreDTO {
+    // Atributs de la classe
     public Integer id_ordre;
     public String identificador;
     public String gestorResponsable;
@@ -32,9 +38,11 @@ public class OrdreDTO {
     public String transportista;
     public String grupMozos;
 
+    // Constructor de la classe
     public OrdreDTO() {
     }
 
+    // Constructor de la classe a partir d'un Ordre
     public OrdreDTO(Ordre o) {
         this.id_ordre = o.getId_ordre();
         this.identificador = o.getIdentificador();
