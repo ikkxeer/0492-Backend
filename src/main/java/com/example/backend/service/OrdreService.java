@@ -87,6 +87,15 @@ public class OrdreService {
 
     @Transactional(readOnly = true)
     public Optional<OrdreDTO> findByIdentificador(String id) {
+        try {
+            Integer numericId = Integer.parseInt(id.trim());
+            Optional<Ordre> opt = ordreRepository.findById(numericId);
+            if (opt.isPresent()) {
+                return opt.map(this::convertToDTOWithPesRecalculated);
+            }
+        } catch (NumberFormatException e) {
+            // ignora i continua
+        }
         return ordreRepository.findByIdentificadorWithPales(id)
                 .map(this::convertToDTOWithPesRecalculated);
     }
