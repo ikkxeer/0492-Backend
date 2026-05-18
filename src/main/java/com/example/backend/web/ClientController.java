@@ -50,8 +50,8 @@ public class ClientController {
     
     // Endpoint per crear un client: POST /api/client
     @PostMapping
-    public Client create(@RequestBody Client pale) {
-        return clientService.saveClient(pale);
+    public Client create(@RequestBody Client client) {
+        return clientService.saveClient(client);
     }
     
     // Endpoint per editar un client: PUT /api/client/{id}
@@ -74,9 +74,9 @@ public class ClientController {
     // Endpoint per eliminar un client: DELETE /api/client/{id} 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        // Si el pale existeix
+        // Si el client existeix
         if (clientService.findClientById(id).isPresent()) {
-            // Eliminem el pale
+            // Eliminem el client de manera segura (disassociant-lo de qualsevol grup de pales)
             clientService.deleteClient(id);
             
             // Retornem la resposta
