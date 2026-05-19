@@ -26,6 +26,14 @@ public interface IncidenciaRepository extends JpaRepository<Incidencia, Integer>
     @Query("SELECT i FROM Incidencia i WHERE i.assignatA = :userId")
     List<Incidencia> findByAssignatA(@Param("userId") Integer userId);
 
+    // Troba les incidencies assignades al grup de mozos de l'usuari o reportades per ell mateix
+    @Query(value = "SELECT DISTINCT i.* FROM incidencia i " +
+                   "LEFT JOIN grupmozos gm ON i.assignat_a = gm.id_grup " +
+                   "LEFT JOIN grupmozos_usuaris gmu ON gm.id_grup = gmu.id_grup " +
+                   "WHERE gmu.id_usuari = :userId OR i.reportat_per = :userId",
+           nativeQuery = true)
+    List<Incidencia> findByMozoUsuarioId(@Param("userId") Integer userId);
+
     // Agrupa i compta les incidències per estat
     @Query("SELECT i.estat, COUNT(i) FROM Incidencia i GROUP BY i.estat")
     List<Object[]> countByEstat();

@@ -44,22 +44,41 @@ public class IncidenciaService {
 
     // Retorna les incidencies segons el rol
     public List<Incidencia> obtenerSegunRol(String rol, Integer userId) {
+        System.out.println("[DEBUG - INCIDENCIA] obtenerSegunRol -> rol: [" + rol + "], userId: [" + userId + "]");
         List<Incidencia> result;
-        if ("ADMIN".equals(rol)) {
+        if (rol == null) {
+            result = List.of();
+        } else if (rol.equalsIgnoreCase("ADMIN")) {
             result = repo.findAll();
-        } else if ("GESTOR".equals(rol)) {
+        } else if (rol.equalsIgnoreCase("GESTOR")) {
             result = repo.findAll().stream()
                     .filter(i -> userId.equals(i.getAssignatA()) || userId.equals(i.getReportatPer()))
                     .toList();
-        } else if ("MOZO".equals(rol)) {
-            result = repo.findByAssignatA(userId);
-        } else if ("TRANSPORTISTA".equals(rol)) {
+        } else if (rol.equalsIgnoreCase("MOZO") || rol.equalsIgnoreCase("MOSSO")) {
+            java.util.Optional<UserAccount> userOpt = userRepository.findById(userId);
+            if (userOpt.isPresent()) {
+                try {
+                    List<String> grupNames = userOpt.get().getGrups().stream()
+                        .map(g -> g.getNom() + " (ID: " + g.getId_grup() + ")")
+                        .toList();
+                    System.out.println("[DEBUG - INCIDENCIA] User " + userOpt.get().getNom() + " (ID: " + userId + ") found. Groups: " + grupNames);
+                } catch (Exception e) {
+                    System.out.println("[DEBUG - INCIDENCIA] Error fetching groups for user: " + e.getMessage());
+                }
+            } else {
+                System.out.println("[DEBUG - INCIDENCIA] User with ID " + userId + " NOT found in DB!");
+            }
+            result = repo.findByMozoUsuarioId(userId);
+            System.out.println("[DEBUG - INCIDENCIA] MOZO query returned count: " + (result != null ? result.size() : 0));
+        } else if (rol.equalsIgnoreCase("TRANSPORTISTA") || rol.equalsIgnoreCase("REPARTIDOR")) {
             result = repo.findByReportatPer(userId);
         } else {
             result = List.of();
         }
 
-        return result.stream().map(this::populateNoms).toList();
+        List<Incidencia> populated = result.stream().map(this::populateNoms).toList();
+        System.out.println("[DEBUG - INCIDENCIA] obtenerSegunRol total populated: " + populated.size());
+        return populated;
     }
 
     // Crea una incidencia
