@@ -132,4 +132,15 @@ public class DashboardService {
         result.add(Map.of("name", "Entregat", "value", ordreRepo.countByEstat("ENTREGAT")));
         return result;
     }
+
+    @Autowired
+    private com.example.backend.repo.ClientRepository clientRepo;
+
+    // Retorna el resum de clients (només el total)
+    public java.util.List<Map<String, Object>> getClientsTotals() {
+        java.util.List<Map<String, Object>> result = new ArrayList<>();
+        long total = clientRepo.count();
+        result.add(Map.of("mes", "Total", "total", total));
+        return result;
+    }
 }

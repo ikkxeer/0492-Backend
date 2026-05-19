@@ -92,4 +92,10 @@ public class DashboardController {
     public ResponseEntity<?> getGestorIncidenciesEstat() {
         return getIncidenciesEstat();
     }
+
+    // Endpoint per obtenir el resum de clients totals de la base de dades: GET /api/dashboard/clients-totals
+    @GetMapping("/clients-totals")
+    public ResponseEntity<?> getClientsTotals() {
+        return ResponseEntity.ok(dashboardService.getClientsTotals());
+    }
 }
